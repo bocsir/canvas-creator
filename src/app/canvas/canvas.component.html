@@ -1,1 +1,18 @@
-<canvas id="canvas" #myCanvas></canvas>
+<main>
+
+    <canvas id="canvas" #myCanvas></canvas>
+
+    <div class="logo"></div>
+
+    <div id="cta">
+        <h1>Generate a customizable graphic with the HTML5 Canvas API <i class="fa-solid fa-arrow-right"></i></h1> 
+        <div class="btn-container" (mouseenter)="allowHoverEvents()" (mouseleave)="ignorePointerEvents()">
+            <p class="cta-btn-text"><span>Get Started</span></p>                
+            <div class="button-border" [ngClass]="{'allow-pointer-events': isHovering}">
+                <a href="/"></a>
+            </div>
+
+    
+        </div>
+    </div>
+</main>

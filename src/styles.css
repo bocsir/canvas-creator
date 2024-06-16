@@ -1,3 +1,8 @@
+@font-face {
+    font-family: 'kode';
+    src: url(./app/assets/kode-mono.ttf);
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -6,6 +11,8 @@
 
 body {
     background-color: black;
+    font-family: 'kode', monospace;
+    color: white;
 }
 
 canvas {
