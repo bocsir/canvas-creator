@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { NgModule, Component, ViewChild, ElementRef, AfterViewInit} from '@angular/core';
+import { Component, ViewChild, ElementRef, AfterViewInit, HostListener} from '@angular/core';
 
 @Component({
   selector: 'app-canvas',
@@ -8,48 +8,34 @@ import { NgModule, Component, ViewChild, ElementRef, AfterViewInit} from '@angul
   templateUrl: './canvas.component.html',
   styleUrl: './canvas.component.css'
 })
-export class CanvasComponent implements AfterViewInit {
-
-  isHovering = false;
-
-  allowHoverEvents() {
-    this.isHovering = true;
-  }
-
-  ignorePointerEvents() {
-    this.isHovering = false;
-  }
-
-  @ViewChild('myCanvas', { static: true }) 
-  canvas!: ElementRef<HTMLCanvasElement>;
+export class CanvasComponent {
+  @ViewChild('myCanvas', { static: true }) canvas!: ElementRef<HTMLCanvasElement>;
   ctx!: CanvasRenderingContext2D;
-
   flowField!: FlowFieldEffect;
 
-  ngAfterViewInit(): void {
-    this.windowResizeListener();
-    this.windowMouseListener();
+  @HostListener('window:load', ['$event'])
+  onLoad() {
     this.ctx = this.canvas.nativeElement.getContext('2d')!;
     this.canvas.nativeElement.width = window.innerWidth;
     this.canvas.nativeElement.height = window.innerHeight;
-    this.flowField = new FlowFieldEffect(this.ctx, window.innerWidth, window.innerHeight)
+    this.flowField = new FlowFieldEffect(this.ctx, this.canvas.nativeElement.width, this.canvas.nativeElement.height)
     this.flowField.animate(0);
   }
-
-  private windowResizeListener(): void {
-    window.addEventListener('resize', () => {
-      this.canvas.nativeElement.width = window.innerWidth;
-      this.canvas.nativeElement.height = window.innerHeight;   
-      this.flowField = new FlowFieldEffect(this.ctx, window.innerWidth, window.innerHeight);
-      this.flowField.animate(0);
-    });
+  
+  @HostListener('window:resize', ['$event'])
+  onResize() {
+    this.canvas.nativeElement.width = window.innerWidth;
+    this.canvas.nativeElement.height = window.innerHeight;  
+    this.ctx = this.canvas.nativeElement.getContext('2d')!; 
+    this.flowField.stopAnimation();
+    this.flowField = new FlowFieldEffect(this.ctx, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
+    this.flowField.animate();
   }
 
-  private windowMouseListener(): void {
-    window.addEventListener('mousemove', (e) => {
-      mouse.x = e.x;
-      mouse.y = e.y;
-    })
+  @HostListener('document:mousemove', ['$event'])
+  onMouseMove(event: MouseEvent) {
+    mouse.x = event.x;
+    mouse.y = event.y;
   }
 }
 class FlowFieldEffect {
@@ -112,7 +98,14 @@ class FlowFieldEffect {
     this.#ctx.stroke();
   }
   
-  animate(timeStamp: number) {
+  stopAnimation() {
+    cancelAnimationFrame(this.#flowFieldAnimation);
+  }
+
+  animate(timeStamp?: number) {
+    console.log('animating');
+    timeStamp = (timeStamp) ? timeStamp : 0;
+  
     //get change in time between frames for smooth animation on all machines
     let deltaTime = timeStamp - this.#lastTime;
     this.#lastTime = timeStamp;
@@ -123,7 +116,7 @@ class FlowFieldEffect {
       (this.#radius > 8 || this.#radius < -8 ) ? this.#vr *= -1 : '';
 
       for (let y = 0; y < this.#height; y+= this.#cellSize) {
-        for (let x = 0; x < this.#width; x+= this.#cellSize){
+        for (let x = 0; x < this.#width; x+= this.#cellSize) {
           const angle = (Math.cos(x * .01) + Math.sin(y * .01)) * this.#radius;
           this.#draw(angle, x, y);
         }
