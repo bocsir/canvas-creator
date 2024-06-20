@@ -1,4 +1,4 @@
-main {
+#cta-container {
     width: 100vw;
     height: 100vh;
     display: flex;
@@ -80,4 +80,13 @@ a {
     to {
         transform: rotate(360deg);
     }
+}
+
+#up-arrow {
+    position: absolute;
+    scale: .04;
+    top: 52vh;
+    z-index: 10;
+    transform: scaleX(1.3);
+    cursor: pointer;
 }

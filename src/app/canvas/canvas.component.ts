@@ -13,8 +13,7 @@ export class CanvasComponent {
   ctx!: CanvasRenderingContext2D;
   flowField!: FlowFieldEffect;
 
-  @HostListener('window:load', ['$event'])
-  onLoad() {
+  ngOnInit(): void {
     this.ctx = this.canvas.nativeElement.getContext('2d')!;
     this.canvas.nativeElement.width = window.innerWidth;
     this.canvas.nativeElement.height = window.innerHeight;
@@ -103,7 +102,6 @@ class FlowFieldEffect {
   }
 
   animate(timeStamp?: number) {
-    console.log('animating');
     timeStamp = (timeStamp) ? timeStamp : 0;
   
     //get change in time between frames for smooth animation on all machines

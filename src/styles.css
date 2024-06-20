@@ -13,6 +13,7 @@ body {
     background-color: black;
     font-family: 'kode', monospace;
     color: white;
+    overflow-x: hidden;
 }
 
 canvas {
