@@ -2,9 +2,9 @@
     <section id="cta-container">
         <app-canvas></app-canvas>
         <div id="cta">
-            <h1>Generate a customizable graphic with the HTML5 Canvas API <i class="fa-solid fa-arrow-right"></i></h1> 
+            <h1>Generate a customizable graphic with the HTML5 Canvas API</h1> 
             <div class="btn-container" (mouseenter)="allowHoverEvents()" (mouseleave)="ignorePointerEvents()">
-                <p class="cta-btn-text"><span>Get Started</span></p>                
+                <p class="cta-btn-text"><span>Get Started<br><i class="fa-solid fa-arrow-right"></i></span></p>                
                 <div class="button-border" [ngClass]="{'allow-pointer-events': isHovering}">
                     <a routerLink="/design" routerLinkActive="active" ariaCurrentWhenActive="page"></a>
                 </div>        
