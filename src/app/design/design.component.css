@@ -12,8 +12,7 @@ main {
 
     #sidebar {
         padding: 20px;
-        width: 20vw;
-        max-width: 200px;
+        width: 200px;
         height: 100%;
         background-color: rgb(36, 37, 39);
     }
@@ -44,6 +43,32 @@ main {
         }
 
 /* sidebar content */
-.p-slider-handle {
-    top: -130%;
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+
+.slider-container label{
+    font-size: .8rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.slider-container label input {
+    width: 2rem;
+    height: 1.6rem;
+    font-weight: 650;
+}
+
+.slider-container .form-range {
+    cursor: pointer;
+}
+

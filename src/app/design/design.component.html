@@ -1,8 +1,9 @@
 <main>
     <div id="sidebar-container">
         <div id="sidebar" [ngClass]="{'small-width':!isVisible}">
-            <div class="card flex justify-content-center">
-                <p-slider [(ngModel)]="value" (ngModelChange)="onValueChange($event)" styleClass="w-14rem"/>
+            <div class="slider-container">
+                <label for="customRange1" class="form-label">grid density: <input type="number" value={{canvasInputData.gridDensity}}></label>
+                <input type="range" class="form-range" id="customRange1" min="3" max="150" [(ngModel)]="canvasInputData.gridDensity" (ngModelChange)="onValueChange($event, 'gridDensity')">           
             </div>
         </div>    
         <div id="pull-tab" (click)="isVisible = !isVisible">
@@ -12,5 +13,5 @@
         </div>
 
     </div>
-    <app-canvas [receivedValue]="value"></app-canvas>
+    <app-canvas [inputData]="canvasInputData"></app-canvas>
 </main>

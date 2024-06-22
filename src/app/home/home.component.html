@@ -3,21 +3,23 @@
         <app-canvas></app-canvas>
         <div id="cta">
             <h1>Generate a customizable graphic with the HTML5 Canvas API</h1> 
-            <div class="btn-container" (mouseenter)="allowHoverEvents()" (mouseleave)="ignorePointerEvents()">
-                <p class="cta-btn-text"><span>Get Started<br><i class="fa-solid fa-arrow-right"></i></span></p>                
-                <div class="button-border" [ngClass]="{'allow-pointer-events': isHovering}">
-                    <a routerLink="/design" routerLinkActive="active" ariaCurrentWhenActive="page"></a>
-                </div>        
+            <div class="btn-container">
+                 
+                <a routerLink="/design" routerLinkActive="active" ariaCurrentWhenActive="page">
+                    <p class="cta-btn-text">start now<i class="fa-solid fa-arrow-right"></i></p>
+                </a>
             </div>
         </div>
+
         <svg (click)="scrollDown()" id="up-arrow" fill="#ffffff" height="800px" width="800px" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="-51.2 -51.2 614.41 614.41" xml:space="preserve" stroke="#ffffff" stroke-width="0.005120100000000001" transform="rotate(0)">
             <g id="SVGRepo_bgCarrier" stroke-width="0"/>
             <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round" stroke="#CCCCCC" stroke-width="1.02402"/>
             <g id="SVGRepo_iconCarrier"> <g> <g> <path d="M505.755,358.256L271.088,123.589c-8.341-8.341-21.824-8.341-30.165,0L6.256,358.256c-8.341,8.341-8.341,21.824,0,30.165 s21.824,8.341,30.165,0l219.584-219.584l219.584,219.584c4.16,4.16,9.621,6.251,15.083,6.251c5.462,0,10.923-2.091,15.083-6.251 C514.096,380.08,514.096,366.597,505.755,358.256z"/> </g> </g> </g>
         </svg>
-    
     </section>
+
     <section>
         <h2>this is a section with words and pictures that show why this website is cool</h2>
     </section>
+
 </div>

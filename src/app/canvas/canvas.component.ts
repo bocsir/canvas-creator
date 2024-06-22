@@ -13,20 +13,12 @@ export class CanvasComponent {
   ctx!: CanvasRenderingContext2D;
   flowField!: FlowFieldEffect;
 
-  @Input() receivedValue!: number;
+  @Input() inputData!: Object;
   ngOnChanges(): void {
     if(!this.flowField) return;
     this.flowField.stopAnimation();
-    this.flowField = new FlowFieldEffect(this.receivedValue, this.ctx, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
+    this.flowField = new FlowFieldEffect(this.inputData, this.ctx, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
     this.flowField.animate();
-  }
-
-  ngOnInit(): void {
-    this.ctx = this.canvas.nativeElement.getContext('2d')!;
-    this.canvas.nativeElement.width = window.innerWidth;
-    this.canvas.nativeElement.height = window.innerHeight;
-    this.flowField = new FlowFieldEffect(50, this.ctx, this.canvas.nativeElement.width, this.canvas.nativeElement.height)
-    this.flowField.animate(0);
   }
 
   @HostListener('window:resize', ['$event'])
@@ -35,9 +27,18 @@ export class CanvasComponent {
     this.canvas.nativeElement.height = window.innerHeight;  
     this.ctx = this.canvas.nativeElement.getContext('2d')!; 
     this.flowField.stopAnimation();
-    this.flowField = new FlowFieldEffect(50, this.ctx, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
+    this.flowField = new FlowFieldEffect(this.inputData, this.ctx, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
     this.flowField.animate();
   }
+
+  ngOnInit(): void {
+    this.ctx = this.canvas.nativeElement.getContext('2d')!;
+    this.canvas.nativeElement.width = window.innerWidth;
+    this.canvas.nativeElement.height = window.innerHeight;
+    this.flowField = new FlowFieldEffect(15, this.ctx, this.canvas.nativeElement.width, this.canvas.nativeElement.height)
+    this.flowField.animate(0);
+  }
+
 
   @HostListener('document:mousemove', ['$event'])
   onMouseMove(event: MouseEvent) {
@@ -57,10 +58,10 @@ class FlowFieldEffect {
   #gradient: any;
   #radius: number;
   #vr: number;
-  #recievedVal: number;
+  #recievedData: Object;
 
-  constructor(recievedVal: number, ctx: CanvasRenderingContext2D, width: number, height: number) {
-    this.#recievedVal = recievedVal;
+  constructor(recievedData: any, ctx: CanvasRenderingContext2D, width: number, height: number) {
+    this.#recievedData = recievedData;
 
     this.#ctx = ctx;
     this.#ctx.strokeStyle = 'white';
@@ -72,8 +73,8 @@ class FlowFieldEffect {
     this.#lastTime = 0;
     this.#interval = 1000/60;
     this.#timer = 0;
-    //line density
-    this.#cellSize= this.#recievedVal;
+    //grid density
+    this.#cellSize = recievedData.gridDensity;
     this.#createGradient();
 
     this.#ctx.strokeStyle = this.#gradient

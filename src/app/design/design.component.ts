@@ -14,10 +14,13 @@ import { SliderModule } from 'primeng/slider';
 })
 export class DesignComponent {
   isVisible: boolean = true;
-  value: number = 50;
 
-  onValueChange(newVal: number) {
-    console.log(newVal);
+  canvasInputData = {
+    gridDensity: 50
+  };
+
+  onValueChange(newVal: number, key: string) {
+    this.canvasInputData = { ...this.canvasInputData, [key]: newVal };
   }
 
 }
