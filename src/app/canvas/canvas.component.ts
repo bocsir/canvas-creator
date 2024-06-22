@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, ViewChild, ElementRef, AfterViewInit, HostListener} from '@angular/core';
+import { Component, ViewChild, ElementRef, HostListener, Input, OnChanges, SimpleChanges} from '@angular/core';
 
 @Component({
   selector: 'app-canvas',
@@ -13,21 +13,29 @@ export class CanvasComponent {
   ctx!: CanvasRenderingContext2D;
   flowField!: FlowFieldEffect;
 
+  @Input() receivedValue!: number;
+  ngOnChanges(): void {
+    if(!this.flowField) return;
+    this.flowField.stopAnimation();
+    this.flowField = new FlowFieldEffect(this.receivedValue, this.ctx, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
+    this.flowField.animate();
+  }
+
   ngOnInit(): void {
     this.ctx = this.canvas.nativeElement.getContext('2d')!;
     this.canvas.nativeElement.width = window.innerWidth;
     this.canvas.nativeElement.height = window.innerHeight;
-    this.flowField = new FlowFieldEffect(this.ctx, this.canvas.nativeElement.width, this.canvas.nativeElement.height)
+    this.flowField = new FlowFieldEffect(50, this.ctx, this.canvas.nativeElement.width, this.canvas.nativeElement.height)
     this.flowField.animate(0);
   }
-  
+
   @HostListener('window:resize', ['$event'])
   onResize() {
     this.canvas.nativeElement.width = window.innerWidth;
     this.canvas.nativeElement.height = window.innerHeight;  
     this.ctx = this.canvas.nativeElement.getContext('2d')!; 
     this.flowField.stopAnimation();
-    this.flowField = new FlowFieldEffect(this.ctx, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
+    this.flowField = new FlowFieldEffect(50, this.ctx, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
     this.flowField.animate();
   }
 
@@ -49,8 +57,11 @@ class FlowFieldEffect {
   #gradient: any;
   #radius: number;
   #vr: number;
+  #recievedVal: number;
 
-  constructor(ctx: CanvasRenderingContext2D, width: number, height: number) {
+  constructor(recievedVal: number, ctx: CanvasRenderingContext2D, width: number, height: number) {
+    this.#recievedVal = recievedVal;
+
     this.#ctx = ctx;
     this.#ctx.strokeStyle = 'white';
     this.#ctx.lineWidth = 1;
@@ -62,7 +73,7 @@ class FlowFieldEffect {
     this.#interval = 1000/60;
     this.#timer = 0;
     //line density
-    this.#cellSize= 15;
+    this.#cellSize= this.#recievedVal;
     this.#createGradient();
 
     this.#ctx.strokeStyle = this.#gradient

@@ -1,3 +1,6 @@
+@import "primeng/resources/themes/lara-light-blue/theme.css";
+@import "primeng/resources/primeng.css";
+
 @font-face {
     font-family: 'kode';
     src: url(./app/assets/kode-mono.ttf);
@@ -21,4 +24,25 @@ canvas {
     background: black;
     top: 0;
     left: 0;
+}
+
+.p-slider-handle {
+    top: -130%;
+    border: transparent;
+    cursor: grab;
+    transform: translateX(-9px);
+}
+
+.p-slider-handle:focus {
+    box-shadow: none;
+    cursor: grab;
+
+}
+
+.p-slider-handle:hover {
+    background: white;
+}
+
+.p-slider-range {
+    border-radius: 6px;
 }

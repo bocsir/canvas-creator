@@ -11,6 +11,7 @@ main {
 }
 
     #sidebar {
+        padding: 20px;
         width: 20vw;
         max-width: 200px;
         height: 100%;
@@ -41,3 +42,8 @@ main {
             transform: rotate(180deg);
             left: 0 !important;
         }
+
+/* sidebar content */
+.p-slider-handle {
+    top: -130%;
+}

@@ -1,7 +1,9 @@
 <main>
     <div id="sidebar-container">
         <div id="sidebar" [ngClass]="{'small-width':!isVisible}">
-
+            <div class="card flex justify-content-center">
+                <p-slider [(ngModel)]="value" (ngModelChange)="onValueChange($event)" styleClass="w-14rem"/>
+            </div>
         </div>    
         <div id="pull-tab" (click)="isVisible = !isVisible">
             <svg [ngClass]="{'rotate-right':!isVisible}"
@@ -10,5 +12,5 @@
         </div>
 
     </div>
-    <app-canvas></app-canvas>
+    <app-canvas [receivedValue]="value"></app-canvas>
 </main>
