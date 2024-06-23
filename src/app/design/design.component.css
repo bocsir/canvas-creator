@@ -72,3 +72,6 @@ input[type=number] {
     cursor: pointer;
 }
 
+.slider-container {
+    margin-bottom: 15px;
+}

@@ -35,7 +35,7 @@ export class CanvasComponent {
     this.ctx = this.canvas.nativeElement.getContext('2d')!;
     this.canvas.nativeElement.width = window.innerWidth;
     this.canvas.nativeElement.height = window.innerHeight;
-    this.flowField = new FlowFieldEffect(15, this.ctx, this.canvas.nativeElement.width, this.canvas.nativeElement.height)
+    this.flowField = new FlowFieldEffect(null, this.ctx, this.canvas.nativeElement.width, this.canvas.nativeElement.height)
     this.flowField.animate(0);
   }
 
@@ -58,14 +58,18 @@ class FlowFieldEffect {
   #gradient: any;
   #radius: number;
   #vr: number;
-  #recievedData: Object;
 
   constructor(recievedData: any, ctx: CanvasRenderingContext2D, width: number, height: number) {
-    this.#recievedData = recievedData;
-
+    if (!recievedData) {
+      recievedData = {
+        gridDensity : 50,
+        lineWidth: 1
+      }
+    }
+    
     this.#ctx = ctx;
     this.#ctx.strokeStyle = 'white';
-    this.#ctx.lineWidth = 1;
+    this.#ctx.lineWidth = recievedData.lineWidth;
 
     this.#width = width;
     this.#height= height;
@@ -77,8 +81,8 @@ class FlowFieldEffect {
     this.#cellSize = recievedData.gridDensity;
     this.#createGradient();
 
-    this.#ctx.strokeStyle = this.#gradient
-    this.#radius = 5;
+    this.#ctx.strokeStyle = this.#gradient;
+    this.#radius = 8;
     this.#vr = .03;
   }
 

@@ -2,9 +2,14 @@
     <div id="sidebar-container">
         <div id="sidebar" [ngClass]="{'small-width':!isVisible}">
             <div class="slider-container">
-                <label for="customRange1" class="form-label">grid density: <input type="number" value={{canvasInputData.gridDensity}}></label>
+                <label for="customRange1" class="form-label">grid spacing: <input type="number" value={{canvasInputData.gridDensity}} [(ngModel)]="canvasInputData.gridDensity" (ngModelChange)="onValueChange($event, 'gridDensity')"></label>
                 <input type="range" class="form-range" id="customRange1" min="3" max="150" [(ngModel)]="canvasInputData.gridDensity" (ngModelChange)="onValueChange($event, 'gridDensity')">           
             </div>
+            <div class="slider-container">
+                <label for="customRange2" class="form-label">line width: <input type="number" value={{canvasInputData.lineWidth}} [(ngModel)]="canvasInputData.lineWidth" (ngModelChange)="onValueChange($event, 'lineWidth')"></label>
+                <input type="range" class="form-range" id="customRange2" min="0" max="100" [(ngModel)]="canvasInputData.lineWidth" (ngModelChange)="onValueChange($event, 'lineWidth')">           
+            </div>
+
         </div>    
         <div id="pull-tab" (click)="isVisible = !isVisible">
             <svg [ngClass]="{'rotate-right':!isVisible}"
