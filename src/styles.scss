@@ -1,0 +1,65 @@
+@import "../node_modules/bootstrap/scss/mixins";
+@import "../node_modules/bootstrap/scss/functions";
+@import "../node_modules/bootstrap/scss/variables";
+
+$form-range-track-width:          100%;
+$form-range-track-height:         .5rem;
+$form-range-track-cursor:         pointer;
+$form-range-track-bg:             black;
+$form-range-track-border-radius:  1rem;
+$form-range-track-box-shadow:     $box-shadow-inset;
+
+$component-active-bg: white;
+
+$form-range-thumb-width:                   1rem;
+$form-range-thumb-height:                  $form-range-thumb-width;
+$form-range-thumb-bg:                      $component-active-bg;
+$form-range-thumb-border:                  0;
+$form-range-thumb-border-radius:           1rem;
+$form-range-thumb-box-shadow:              0 .1rem .25rem rgba($black, .1);
+$form-range-thumb-focus-box-shadow:        none;
+$form-range-thumb-focus-box-shadow-width:  $input-focus-width; // For focus box shadow issue in Edge
+$form-range-thumb-active-bg:               white;
+$form-range-thumb-disabled-bg:             $gray-500;
+$form-range-thumb-transition:              background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+
+@import "../node_modules/bootstrap/scss/bootstrap";
+
+@font-face {
+    font-family: 'kode';
+    src: url(./app/assets/kode-mono.ttf);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: black;
+    font-family: 'kode', monospace;
+    color: white;
+    overflow-x: hidden;
+}
+
+canvas {
+    position: absolute;
+    background: black;
+    top: 0;
+    left: 0;
+}
+
+
+.cp-add-color-button-class {
+    font-size: 10px !important;
+    color: black !important;
+    text-decoration: black !important;
+}
+
+.cp-remove-color-button-class {
+    font-family: monospace !important;
+    color: black !important;
+    font-size: 10.3px !important;
+    margin-left: -3px !important;
+}

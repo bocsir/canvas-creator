@@ -4,20 +4,27 @@ import { CommonModule } from '@angular/common';
 import { InputTextModule } from 'primeng/inputtext';
 import { FormsModule } from '@angular/forms';
 import { SliderModule } from 'primeng/slider';
+import { ColorPickerModule } from 'ngx-color-picker';
 
 @Component({
     selector: 'app-design',
     standalone: true,
     templateUrl: './design.component.html',
-    styleUrl: './design.component.css',
-    imports: [CanvasComponent, CommonModule, SliderModule, InputTextModule, FormsModule],
+    styleUrl: './design.component.scss',
+    imports: [CanvasComponent, CommonModule, SliderModule, InputTextModule, FormsModule, ColorPickerModule],
 })
 export class DesignComponent {
   isVisible: boolean = true;
+  color: any;
+  
+
+  minimizeSidebar() {
+    this.isVisible = !this.isVisible;
+  }
 
   //input object with default values
   canvasInputData = {
-    gridDensity: 50,
+    gridSpacing: 50,
     lineWidth: 1
   };
 
@@ -28,7 +35,7 @@ export class DesignComponent {
 //need 2 add error handling to tell user range is wrong if false
   private valueInRange(value: number, key: string) {
     switch(key) {
-      case 'gridDensity':
+      case 'gridSpacing':
         return (value >= 3 && value <= 150)
       case 'lineWidth':
         return(value >= 0 && value <= 100)

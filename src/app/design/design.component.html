@@ -1,20 +1,47 @@
 <main>
     <div id="sidebar-container">
-        <div id="sidebar" [ngClass]="{'small-width':!isVisible}">
+        <div class="sidebar" [ngClass]="{'small-width':!isVisible}">
             <div class="slider-container">
-                <label for="customRange1" class="form-label">grid spacing: <input type="number" value={{canvasInputData.gridDensity}} [(ngModel)]="canvasInputData.gridDensity" (ngModelChange)="onValueChange($event, 'gridDensity')"></label>
-                <input type="range" class="form-range" id="customRange1" min="3" max="150" [(ngModel)]="canvasInputData.gridDensity" (ngModelChange)="onValueChange($event, 'gridDensity')">           
+                <label for="customRange1" class="form-label">grid spacing: <input type="number"
+                        value={{canvasInputData.gridSpacing}} [(ngModel)]="canvasInputData.gridSpacing"
+                        (ngModelChange)="onValueChange($event, 'gridSpacing')"></label>
+                <input type="range" class="form-range" id="customRange1" min="3" max="150"
+                    [(ngModel)]="canvasInputData.gridSpacing" (ngModelChange)="onValueChange($event, 'gridSpacing')">
             </div>
             <div class="slider-container">
-                <label for="customRange2" class="form-label">line width: <input type="number" value={{canvasInputData.lineWidth}} [(ngModel)]="canvasInputData.lineWidth" (ngModelChange)="onValueChange($event, 'lineWidth')"></label>
-                <input type="range" class="form-range" id="customRange2" min="0" max="100" [(ngModel)]="canvasInputData.lineWidth" (ngModelChange)="onValueChange($event, 'lineWidth')">           
+                <label for="customRange2" class="form-label">line width: <input type="number"
+                        value={{canvasInputData.lineWidth}} [(ngModel)]="canvasInputData.lineWidth"
+                        (ngModelChange)="onValueChange($event, 'lineWidth')"></label>
+                <input type="range" class="form-range" id="customRange2" min="1" max="100"
+                    [(ngModel)]="canvasInputData.lineWidth" (ngModelChange)="onValueChange($event, 'lineWidth')">
             </div>
 
-        </div>    
-        <div id="pull-tab" (click)="isVisible = !isVisible">
-            <svg [ngClass]="{'rotate-right':!isVisible}"
-            
-            id="left-arrow" fill="#000000" height="64px" width="64px" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 512.006 512.006" xml:space="preserve" stroke="#fff" stroke-width="50"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g> <g> <path d="M388.419,475.59L168.834,256.005L388.418,36.421c8.341-8.341,8.341-21.824,0-30.165s-21.824-8.341-30.165,0 L123.586,240.923c-8.341,8.341-8.341,21.824,0,30.165l234.667,234.667c4.16,4.16,9.621,6.251,15.083,6.251 c5.461,0,10.923-2.091,15.083-6.251C396.76,497.414,396.76,483.931,388.419,475.59z"></path> </g> </g> </g></svg>
+            <div class="gradient-color-pickers-container">
+                <input [style.background]="color" [cpWidth]="'280px'" [cpAlphaChannel]="'always'"
+                    [cpOutputFormat]="'rgba'"
+                    [cpPresetColors]="['#ffffff', '#ff5c33', '#ff66b3', '#ccccff', '#b3ffff', '#80ff80', '#ffff33']"
+                    [cpMaxPresetColorsLength]="16"
+                    [cpAddColorButton]="true" [(colorPicker)]="color" />
+            </div>
+        </div>
+        <div class="pull-tab-container">
+            <svg id="pull-tab" width="18" height="69" viewBox="0 0 18 69" fill="none"
+                xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" clip-rule="evenodd"
+                    d="M0 69H1.7197C3.78885 69 5.75198 68.0846 7.08202 66.4995L16.3623 55.4397C17.4202 54.179 18 52.5859 18 50.9402V17.6294C18 15.9836 17.4202 14.3905 16.3623 13.1299L7.44322 2.50049C6.11319 0.915421 4.15005 0 2.0809 0H0V69Z"
+                    fill="#242527" />
+            </svg>
+            <svg (click)="minimizeSidebar()" [ngClass]="{'rotate-right':!isVisible}" id="left-arrow" width="64px"
+                height="64px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#ffffff">
+                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                <g id="SVGRepo_iconCarrier">
+                    <path
+                        d="M14.2893 5.70708C13.8988 5.31655 13.2657 5.31655 12.8751 5.70708L7.98768 10.5993C7.20729 11.3805 7.2076 12.6463 7.98837 13.427L12.8787 18.3174C13.2693 18.7079 13.9024 18.7079 14.293 18.3174C14.6835 17.9269 14.6835 17.2937 14.293 16.9032L10.1073 12.7175C9.71678 12.327 9.71678 11.6939 10.1073 11.3033L14.2893 7.12129C14.6799 6.73077 14.6799 6.0976 14.2893 5.70708Z"
+                        fill="#ffffff"></path>
+                </g>
+            </svg>
+
         </div>
 
     </div>

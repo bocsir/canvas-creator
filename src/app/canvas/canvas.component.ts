@@ -60,9 +60,10 @@ class FlowFieldEffect {
   #vr: number;
 
   constructor(recievedData: any, ctx: CanvasRenderingContext2D, width: number, height: number) {
+    //defaults
     if (!recievedData) {
       recievedData = {
-        gridDensity : 50,
+        gridSpacing : 20,
         lineWidth: 1
       }
     }
@@ -77,8 +78,7 @@ class FlowFieldEffect {
     this.#lastTime = 0;
     this.#interval = 1000/60;
     this.#timer = 0;
-    //grid density
-    this.#cellSize = recievedData.gridDensity;
+    this.#cellSize = recievedData.gridSpacing;
     this.#createGradient();
 
     this.#ctx.strokeStyle = this.#gradient;
@@ -86,6 +86,7 @@ class FlowFieldEffect {
     this.#vr = .03;
   }
 
+  //color(s) for each line
   #createGradient() {
     this.#gradient = this.#ctx.createLinearGradient(0, 0, this.#width, this.#height);
     this.#gradient.addColorStop('0.1', '#ff5c33');

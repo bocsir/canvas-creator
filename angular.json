@@ -26,10 +26,18 @@
                 "input": "public"
               }
             ],
-            "styles": [
-              "src/styles.css"
+            "scripts": [
+              "./node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"
             ],
-            "scripts": []
+            "styles": [
+              "src/styles.scss"
+            ],
+            "stylePreprocessorOptions": {
+              "includePaths": [
+                "src/styles"
+
+              ]
+            }
           },
           "configurations": {
             "production": {
