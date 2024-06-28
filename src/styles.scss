@@ -25,6 +25,16 @@ $form-range-thumb-transition:              background-color .15s ease-in-out, bo
 
 @import "../node_modules/bootstrap/scss/bootstrap";
 
+.btn-outline-primary {
+    --bs-btn-border-color: white;
+    --bs-btn-active-border-color: white;
+    --bs-btn-active-bg: white;
+    --bs-btn-active-color: black;
+    --bs-btn-color: white;
+    --bs-btn-focus-shadow-rgb: 0, 0,0;
+    border: 2px solid white !important; 
+}
+
 @font-face {
     font-family: 'kode';
     src: url(./app/assets/kode-mono.ttf);
@@ -63,3 +73,8 @@ canvas {
     font-size: 10.3px !important;
     margin-left: -3px !important;
 }
+
+.btn:focus, .btn:active {
+    outline: none !important;
+    box-shadow: none !important;
+  }

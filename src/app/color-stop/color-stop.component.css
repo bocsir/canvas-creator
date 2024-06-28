@@ -1,0 +1,38 @@
+#gradient-label {
+    font-size: .8rem;
+    margin-bottom: 10px;
+}
+
+.gradient-color-pickers-container {
+    display: flex;
+    gap: 5px;
+}
+
+.gradient-color-pickers-container input {
+    width: 20%;
+    aspect-ratio: 1;
+    border: transparent;
+    outline: transparent;
+    border-radius: 10px;
+    cursor: pointer;
+    caret-color: transparent;
+}
+
+.gradient-color-pickers-container input:hover {
+    scale: 1.05;
+}
+
+.add-color-stop {
+    width: 20%;
+    aspect-ratio: 1;
+    border: 2px solid white;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.add-color-stop:hover {
+    scale: 1.05;
+}

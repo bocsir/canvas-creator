@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, ViewChild, ElementRef, HostListener, Input, OnChanges, SimpleChanges} from '@angular/core';
+import { CanvasInput } from '../canvas-input';
 
 @Component({
   selector: 'app-canvas',
@@ -9,11 +10,30 @@ import { Component, ViewChild, ElementRef, HostListener, Input, OnChanges, Simpl
   styleUrl: './canvas.component.css'
 })
 export class CanvasComponent {
+  //get canvas element
   @ViewChild('myCanvas', { static: true }) canvas!: ElementRef<HTMLCanvasElement>;
   ctx!: CanvasRenderingContext2D;
   flowField!: FlowFieldEffect;
 
-  @Input() inputData!: Object;
+  defaultInputData!: CanvasInput;
+  //initialize with defaults
+  ngOnInit(): void {
+    this.defaultInputData = {
+      gridSpacing : 20,
+      lineWidth: 2,
+      lineLength: 20,
+      mouseEffect: 'none',
+      mouseRadius: 100,
+    };
+    this.ctx = this.canvas.nativeElement.getContext('2d')!;
+    this.canvas.nativeElement.width = window.innerWidth;
+    this.canvas.nativeElement.height = window.innerHeight;
+    this.flowField = new FlowFieldEffect(this.defaultInputData, this.ctx, this.canvas.nativeElement.width, this.canvas.nativeElement.height)
+    this.flowField.animate(0);
+  }
+
+  //new canvas input data
+  @Input() inputData!: CanvasInput;
   ngOnChanges(): void {
     if(!this.flowField) return;
     this.flowField.stopAnimation();
@@ -27,19 +47,13 @@ export class CanvasComponent {
     this.canvas.nativeElement.height = window.innerHeight;  
     this.ctx = this.canvas.nativeElement.getContext('2d')!; 
     this.flowField.stopAnimation();
-    this.flowField = new FlowFieldEffect(this.inputData, this.ctx, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
+
+    const data = (this.inputData) ? this.inputData : this.defaultInputData;
+    this.flowField = new FlowFieldEffect(data, this.ctx, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
     this.flowField.animate();
   }
 
-  ngOnInit(): void {
-    this.ctx = this.canvas.nativeElement.getContext('2d')!;
-    this.canvas.nativeElement.width = window.innerWidth;
-    this.canvas.nativeElement.height = window.innerHeight;
-    this.flowField = new FlowFieldEffect(null, this.ctx, this.canvas.nativeElement.width, this.canvas.nativeElement.height)
-    this.flowField.animate(0);
-  }
-
-
+  //get mouse coordinates each mousemove
   @HostListener('document:mousemove', ['$event'])
   onMouseMove(event: MouseEvent) {
     mouse.x = event.x;
@@ -58,15 +72,11 @@ class FlowFieldEffect {
   #gradient: any;
   #radius: number;
   #vr: number;
+  #recievedData: CanvasInput;
 
-  constructor(recievedData: any, ctx: CanvasRenderingContext2D, width: number, height: number) {
-    //defaults
-    if (!recievedData) {
-      recievedData = {
-        gridSpacing : 20,
-        lineWidth: 1
-      }
-    }
+  constructor(recievedData: CanvasInput, ctx: CanvasRenderingContext2D, width: number, height: number) {
+ 
+    this.#recievedData = recievedData;
     
     this.#ctx = ctx;
     this.#ctx.strokeStyle = 'white';
@@ -98,16 +108,20 @@ class FlowFieldEffect {
   }
   
   #draw(angle: number, x: number, y: number) {
-
     let dx = mouse.x - x;
     let dy = mouse.y - y;
 
-    let distance = dx * dx + dy * dy;
+    //hypotenuse
+    let distance = Math.sqrt(dx * dx + dy * dy);
+    let maxDist: any;
 
-    if (distance > 700000) distance = 700000;
-    else if (distance < 10000) distance = 10000;
-    length = distance * .0001;
-    //line len
+    //change radius of mouse effect based on user choice
+    //(big distance, big length, smol distance smol length)
+    const radius = this.#recievedData.mouseRadius;
+      //40 is small lines for lit effect and needs a variable
+      maxDist = (distance > radius) ? 40 : null;
+      length = (maxDist ?? distance) * (this.#recievedData.lineLength / 100);
+
     this.#ctx.beginPath();
     this.#ctx.moveTo(x, y);
     this.#ctx.lineTo(x + Math.cos(angle) * length, y + Math.sin(angle) * length);
@@ -130,8 +144,10 @@ class FlowFieldEffect {
       this.#radius += this.#vr;
       (this.#radius > 8 || this.#radius < -8 ) ? this.#vr *= -1 : '';
 
+      //call draw at each coordinate within window using angle for that coordinate and x, y position
       for (let y = 0; y < this.#height; y+= this.#cellSize) {
         for (let x = 0; x < this.#width; x+= this.#cellSize) {
+          //maybe let user enter info directly here as
           const angle = (Math.cos(x * .01) + Math.sin(y * .01)) * this.#radius;
           this.#draw(angle, x, y);
         }

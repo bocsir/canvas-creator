@@ -1,0 +1,13 @@
+<label id="gradient-label">line color(s):</label>
+<div class="gradient-color-pickers-container">
+        <input *ngFor="let colorID of colorEls"
+        [id]="colorID" [style.background]="color" [cpWidth]="'280px'" [cpAlphaChannel]="'always'"
+        [cpOutputFormat]="'rgba'"
+        [cpPresetColors]="['#ffffff', '#ff5c33', '#ff66b3', '#ccccff', '#b3ffff', '#80ff80', '#ffff33']"
+        [cpMaxPresetColorsLength]="16"
+        [cpAddColorButton]="true" [(colorPicker)]="color" />
+
+    <div class="add-color-stop" (click)="newColorStop()">
+        <i class="fa-solid fa-plus"></i>
+    </div>
+</div>

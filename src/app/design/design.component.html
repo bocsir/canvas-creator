@@ -1,47 +1,85 @@
 <main>
+    <a class="logo" href="/">
+        <svg width="56" height="52" viewBox="0 0 56 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M42.3333 46L24 26L5.66666 46H2L24 22L46 46H42.3333Z"
+                fill="#D9D9D9" />
+            <path fill-rule="evenodd" clip-rule="evenodd"
+                d="M12 13L23.9737 26L35.9474 13H32.2632L23.9737 22L15.6842 13H12Z" fill="#D9D9D9" />
+            <path fill-rule="evenodd" clip-rule="evenodd"
+                d="M35.9474 13L23.9737 -2.8193e-05L12 13H15.6842L23.9737 3.99997L32.2632 13H35.9474Z" fill="#D9D9D9" />
+            <path fill-rule="evenodd" clip-rule="evenodd"
+                d="M24 40.9974L4.66023 20L7.62939e-06 25.0736L24 51.1308L24 40.9974Z" fill="#D9D9D9" />
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M24 40.9974L43.3398 20L48 25.0736L24 51.1308L24 40.9974Z"
+                fill="#D9D9D9" />
+            <path fill-rule="evenodd" clip-rule="evenodd"
+                d="M41.3216 43.3011L4.98895 43.3038L3.00001 46.0068L43.3103 46.0038L41.3216 43.3011ZM55.7987 43.3906L56 43.3L55.7987 43.3V43.3906Z"
+                fill="#D9D9D9" />
+        </svg>
+    </a>
     <div id="sidebar-container">
         <div class="sidebar" [ngClass]="{'small-width':!isVisible}">
             <div class="slider-container">
                 <label for="customRange1" class="form-label">grid spacing: <input type="number"
                         value={{canvasInputData.gridSpacing}} [(ngModel)]="canvasInputData.gridSpacing"
-                        (ngModelChange)="onValueChange($event, 'gridSpacing')"></label>
-                <input type="range" class="form-range" id="customRange1" min="3" max="150"
-                    [(ngModel)]="canvasInputData.gridSpacing" (ngModelChange)="onValueChange($event, 'gridSpacing')">
+                        (ngModelChange)="updateValue($event, 'gridSpacing')"></label>
+                <input type="range" class="form-range" id="customRange1" min="4" max="300"
+                    [(ngModel)]="canvasInputData.gridSpacing" (ngModelChange)="updateValue($event, 'gridSpacing')">
             </div>
             <div class="slider-container">
-                <label for="customRange2" class="form-label">line width: <input type="number"
-                        value={{canvasInputData.lineWidth}} [(ngModel)]="canvasInputData.lineWidth"
-                        (ngModelChange)="onValueChange($event, 'lineWidth')"></label>
-                <input type="range" class="form-range" id="customRange2" min="1" max="100"
-                    [(ngModel)]="canvasInputData.lineWidth" (ngModelChange)="onValueChange($event, 'lineWidth')">
+                <label for="customRange2" class="form-label">line width:
+                    <input type="number" value={{canvasInputData.lineWidth}} [(ngModel)]="canvasInputData.lineWidth"
+                        (ngModelChange)="updateValue($event, 'lineWidth')"></label>
+                <input type="range" class="form-range" id="customRange2" min="1" max="200"
+                    [(ngModel)]="canvasInputData.lineWidth" (ngModelChange)="updateValue($event, 'lineWidth')">
+            </div>
+            <div class="slider-container">
+                <label for="customRange2" class="form-label">line length:
+                    <input type="number" value={{canvasInputData.lineLength}} [(ngModel)]="canvasInputData.lineLength"
+                        (ngModelChange)="updateValue($event, 'lineLength')" min="1" max="200"></label>
+                <input type="range" class="form-range" id="customRange2" min="1" max="200"
+                    [(ngModel)]="canvasInputData.lineLength" (ngModelChange)="updateValue($event, 'lineLength')">
             </div>
 
-            <div class="gradient-color-pickers-container">
-                <input [style.background]="color" [cpWidth]="'280px'" [cpAlphaChannel]="'always'"
-                    [cpOutputFormat]="'rgba'"
-                    [cpPresetColors]="['#ffffff', '#ff5c33', '#ff66b3', '#ccccff', '#b3ffff', '#80ff80', '#ffff33']"
-                    [cpMaxPresetColorsLength]="16"
-                    [cpAddColorButton]="true" [(colorPicker)]="color" />
+            <div class="slider-container">
+                <app-color-stop></app-color-stop>
             </div>
+            <div class="slider-container">
+                <label class="form-label">mouse effect type: </label>
+                <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+                    <input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off">
+                    <label (click)="updateMouseEffect($event)" class="btn btn-outline-primary shadow-none" for="btnradio1">none</label>
+
+                    <input type="radio" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off">
+                    <label (click)="updateMouseEffect($event)" class="btn btn-outline-primary shadow-none" for="btnradio2">dim</label>
+
+                    <input type="radio" class="btn-check" name="btnradio" id="btnradio3" autocomplete="off" checked>
+                    <label (click)="updateMouseEffect($event)" class="btn btn-outline-primary shadow-none" for="btnradio3">lit</label>
+                </div>
+
+            </div>
+            <div class="slider-container">
+                <label for="customRange3" class="form-label">mouse effect radius:
+                    <input type="number" value={{canvasInputData.mouseRadius}} [(ngModel)]="canvasInputData.mouseRadius"
+                        (ngModelChange)="updateValue($event, 'mouseRadius')"></label>
+                <input type="range" class="form-range" id="customRange3" min="20" max="500"
+                    [(ngModel)]="canvasInputData.mouseRadius" (ngModelChange)="updateValue($event, 'mouseRadius')">
+            </div>
+
         </div>
         <div class="pull-tab-container">
-            <svg id="pull-tab" width="18" height="69" viewBox="0 0 18 69" fill="none"
+            <svg (click)="isVisible = !isVisible" id="pull-tab" width="18" height="69" viewBox="0 0 18 69" fill="none"
                 xmlns="http://www.w3.org/2000/svg">
                 <path fill-rule="evenodd" clip-rule="evenodd"
                     d="M0 69H1.7197C3.78885 69 5.75198 68.0846 7.08202 66.4995L16.3623 55.4397C17.4202 54.179 18 52.5859 18 50.9402V17.6294C18 15.9836 17.4202 14.3905 16.3623 13.1299L7.44322 2.50049C6.11319 0.915421 4.15005 0 2.0809 0H0V69Z"
                     fill="#242527" />
             </svg>
-            <svg (click)="minimizeSidebar()" [ngClass]="{'rotate-right':!isVisible}" id="left-arrow" width="64px"
-                height="64px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#ffffff">
-                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-                <g id="SVGRepo_iconCarrier">
-                    <path
-                        d="M14.2893 5.70708C13.8988 5.31655 13.2657 5.31655 12.8751 5.70708L7.98768 10.5993C7.20729 11.3805 7.2076 12.6463 7.98837 13.427L12.8787 18.3174C13.2693 18.7079 13.9024 18.7079 14.293 18.3174C14.6835 17.9269 14.6835 17.2937 14.293 16.9032L10.1073 12.7175C9.71678 12.327 9.71678 11.6939 10.1073 11.3033L14.2893 7.12129C14.6799 6.73077 14.6799 6.0976 14.2893 5.70708Z"
-                        fill="#ffffff"></path>
-                </g>
+            <svg (click)="isVisible = !isVisible" [ngClass]="{'rotate-right':!isVisible}" class="left-arrow" width="34"
+                height="19" viewBox="0 0 34 19" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect width="4" height="22.937" rx="2"
+                    transform="matrix(0.739039 0.673663 -0.739039 0.673663 16.9513 0)" fill="#D9D9D9" />
+                <rect width="4" height="22.937" rx="2"
+                    transform="matrix(0.739039 -0.673663 0.739039 0.673663 14 2.69464)" fill="#D9D9D9" />
             </svg>
-
         </div>
 
     </div>

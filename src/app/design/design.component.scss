@@ -3,6 +3,13 @@ main {
     position: relative;
 }
 
+.logo {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    margin: 15px;
+}
+
 #sidebar-container {
     display: flex;
     align-items: center;
@@ -30,6 +37,9 @@ main {
         position: relative;
     }
 
+    .pull-tab-container * {
+        cursor: pointer;
+    }
     
     #pull-tab {
         position: relative;
@@ -37,18 +47,16 @@ main {
         align-items: center;
     }
 
-        #left-arrow {
-            cursor: pointer;
+        .left-arrow {
             position: absolute;
-            left: -24px !important;
-            top: 2px;
+            left: -9px !important;
+            top: 25px;
             scale: .6;
-            padding: 10px;        
+            transform: rotate(-90deg);    
         }
 
         .rotate-right {
-            transform: rotate(180deg);
-            left: 0 !important;
+            transform: rotate(90deg);
         }
 
 /* sidebar content */
@@ -83,19 +91,5 @@ input[type=number] {
 
 .slider-container {
     margin-bottom: 15px;
+    font-size: .8rems
 }
-
-.gradient-color-pickers-container input {
-    width: 20%;
-    aspect-ratio: 1;
-    border: transparent;
-    outline: transparent;
-    border-radius: 10px;
-    cursor: pointer;
-    caret-color: transparent;
-}
-
-.gradient-color-pickers-container input:hover {
-    scale: 1.05;
-}
-
