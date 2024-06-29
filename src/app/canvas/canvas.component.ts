@@ -113,14 +113,22 @@ class FlowFieldEffect {
 
     //hypotenuse
     let distance = Math.sqrt(dx * dx + dy * dy);
-    let maxDist: any;
-
-    //change radius of mouse effect based on user choice
-    //(big distance, big length, smol distance smol length)
+    let maxDist: number | null;
+    let length!: number;
     const radius = this.#recievedData.mouseRadius;
-      //40 is small lines for lit effect and needs a variable
-      maxDist = (distance > radius) ? 40 : null;
-      length = (maxDist ?? distance) * (this.#recievedData.lineLength / 100);
+
+    switch(this.#recievedData.mouseEffect) {
+      case('none'):
+        length = this.#recievedData.lineLength;
+        break;
+      case('lit'):
+      //if the
+        maxDist = (distance > radius) ? 40 : null;
+        length = (maxDist ?? distance) * (this.#recievedData.lineLength / 100);
+        break;
+      case('dim'):
+
+    }
 
     this.#ctx.beginPath();
     this.#ctx.moveTo(x, y);

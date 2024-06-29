@@ -17,63 +17,133 @@
         </svg>
     </a>
     <div id="sidebar-container">
-        <div class="sidebar" [ngClass]="{'small-width':!isVisible}">
+        <div class="sidebar" [ngClass]="{'small-width':!menuVisible}">
             <div class="slider-container">
-                <label for="customRange1" class="form-label">grid spacing: <input type="number"
-                        value={{canvasInputData.gridSpacing}} [(ngModel)]="canvasInputData.gridSpacing"
-                        (ngModelChange)="updateValue($event, 'gridSpacing')"></label>
-                <input type="range" class="form-range" id="customRange1" min="4" max="300"
-                    [(ngModel)]="canvasInputData.gridSpacing" (ngModelChange)="updateValue($event, 'gridSpacing')">
-            </div>
-            <div class="slider-container">
-                <label for="customRange2" class="form-label">line width:
-                    <input type="number" value={{canvasInputData.lineWidth}} [(ngModel)]="canvasInputData.lineWidth"
-                        (ngModelChange)="updateValue($event, 'lineWidth')"></label>
-                <input type="range" class="form-range" id="customRange2" min="1" max="200"
-                    [(ngModel)]="canvasInputData.lineWidth" (ngModelChange)="updateValue($event, 'lineWidth')">
-            </div>
-            <div class="slider-container">
-                <label for="customRange2" class="form-label">line length:
-                    <input type="number" value={{canvasInputData.lineLength}} [(ngModel)]="canvasInputData.lineLength"
-                        (ngModelChange)="updateValue($event, 'lineLength')" min="1" max="200"></label>
-                <input type="range" class="form-range" id="customRange2" min="1" max="200"
-                    [(ngModel)]="canvasInputData.lineLength" (ngModelChange)="updateValue($event, 'lineLength')">
+                <label for="grid-range" class="form-label">grid spacing:
+                     <input 
+                        type="number"
+                        #gSpace="ngModel"
+                        [min]="gridSpaceMin" 
+                        [max]="gridSpaceMax"    
+                        [ngModel]="canvasInputData.gridSpacing"
+                        (ngModelChange)="updateValue($event, 'gridSpacing')">
+                </label>
+                <input 
+                    type="range" 
+                    class="form-range" 
+                    id="grid-range" 
+                    [min]="gridSpaceMin" 
+                    [max]="gridSpaceMax"
+                    [ngModel]="canvasInputData.gridSpacing" 
+                    (ngModelChange)="updateValue($event, 'gridSpacing')">
+
+                <div class="input-error" *ngIf="gSpace.invalid">
+                    <i class="fa-solid fa-triangle-exclamation"></i> 
+                    value should be between {{gridSpaceMin}} and {{gridSpaceMax}}
+                </div>
             </div>
 
             <div class="slider-container">
+                <label for="line-width" class="form-label">line width:
+                    <input 
+                        type="number"
+                        #lWidth="ngModel"
+                        [min]="lineWidthMin" 
+                        [max]="lineWidthMax"    
+                        [ngModel]="canvasInputData.lineWidth"
+                        (ngModelChange)="updateValue($event, 'lineWidth')">
+                </label>
+                <input 
+                    type="range" 
+                    class="form-range" 
+                    id="line-width"
+                    [min]="lineWidthMin" 
+                    [max]="lineWidthMax"    
+                    [ngModel]="canvasInputData.lineWidth" 
+                    (ngModelChange)="updateValue($event, 'lineWidth')">
+            
+                <div class="input-error" *ngIf="lWidth.invalid">
+                    <i class="fa-solid fa-triangle-exclamation"></i> 
+                    value should be between {{lineWidthMin}} and {{lineWidthMax}}
+                </div>    
+            </div>
+
+            <div class="slider-container">
+                <label for="line-length" class="form-label">line length:
+                    <input 
+                        type="number"
+                        #lLength="ngModel"
+                        [min]="lineLengthMin" 
+                        [max]="lineLengthMax"    
+                        [ngModel]="canvasInputData.lineLength"
+                        (ngModelChange)="updateValue($event, 'lineLength')">
+                </label>
+                <input 
+                    type="range" 
+                    class="form-range" 
+                    id="line-length"
+                    [min]="lineLengthMin" 
+                    [max]="lineLengthMax"    
+                    [ngModel]="canvasInputData.lineLength" 
+                    (ngModelChange)="updateValue($event, 'lineLength')">
+            
+                <div class="input-error" *ngIf="lLength.invalid">
+                    <i class="fa-solid fa-triangle-exclamation"></i> 
+                    value should be between {{lineLengthMin}} and {{lineLengthMax}}
+                </div>    
+            </div>
+            <div class="slider-container">
                 <app-color-stop></app-color-stop>
             </div>
+
             <div class="slider-container">
                 <label class="form-label">mouse effect type: </label>
                 <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
-                    <input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off">
                     <label (click)="updateMouseEffect($event)" class="btn btn-outline-primary shadow-none" for="btnradio1">none</label>
+                    <input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off" checked>
 
                     <input type="radio" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off">
                     <label (click)="updateMouseEffect($event)" class="btn btn-outline-primary shadow-none" for="btnradio2">dim</label>
 
-                    <input type="radio" class="btn-check" name="btnradio" id="btnradio3" autocomplete="off" checked>
+                    <input type="radio" class="btn-check" name="btnradio" id="btnradio3" autocomplete="off">
                     <label (click)="updateMouseEffect($event)" class="btn btn-outline-primary shadow-none" for="btnradio3">lit</label>
                 </div>
 
             </div>
-            <div class="slider-container">
-                <label for="customRange3" class="form-label">mouse effect radius:
-                    <input type="number" value={{canvasInputData.mouseRadius}} [(ngModel)]="canvasInputData.mouseRadius"
-                        (ngModelChange)="updateValue($event, 'mouseRadius')"></label>
-                <input type="range" class="form-range" id="customRange3" min="20" max="500"
-                    [(ngModel)]="canvasInputData.mouseRadius" (ngModelChange)="updateValue($event, 'mouseRadius')">
+            <div *ngIf="mouseEffect" class="slider-container">
+                <label for="mouse-effect-range" class="form-label">mouse effect radius:
+                    <input
+                        type="number" 
+                        #mRadius="ngModel" 
+                        [min]="mouseRadMin" 
+                        [max]="mouseRadMax"
+                        [ngModel]="canvasInputData.mouseRadius"
+                        (ngModelChange)="updateValue($event, 'mouseRadius')">
+                </label>
+                <input 
+                    type="range" 
+                    class="form-range" 
+                    id="mouse-effect-range"
+                    [min]="mouseRadMin"
+                    [max]="mouseRadMax"
+                    [ngModel]="canvasInputData.mouseRadius" 
+                    (ngModelChange)="updateValue($event, 'mouseRadius')">
+
+                <div class="input-error" *ngIf="mRadius.invalid">
+                    <i class="fa-solid fa-triangle-exclamation"></i> 
+                    value should be between {{mouseRadMin}} and {{mouseRadMax}}
+                </div>
             </div>
 
         </div>
         <div class="pull-tab-container">
-            <svg (click)="isVisible = !isVisible" id="pull-tab" width="18" height="69" viewBox="0 0 18 69" fill="none"
+            <svg (click)="menuVisible = !menuVisible" id="pull-tab" width="18" height="69" viewBox="0 0 18 69" fill="none"
                 xmlns="http://www.w3.org/2000/svg">
                 <path fill-rule="evenodd" clip-rule="evenodd"
                     d="M0 69H1.7197C3.78885 69 5.75198 68.0846 7.08202 66.4995L16.3623 55.4397C17.4202 54.179 18 52.5859 18 50.9402V17.6294C18 15.9836 17.4202 14.3905 16.3623 13.1299L7.44322 2.50049C6.11319 0.915421 4.15005 0 2.0809 0H0V69Z"
                     fill="#242527" />
             </svg>
-            <svg (click)="isVisible = !isVisible" [ngClass]="{'rotate-right':!isVisible}" class="left-arrow" width="34"
+            <svg (click)="menuVisible = !menuVisible" [ngClass]="{'rotate-right':!menuVisible}" class="left-arrow" width="34"
                 height="19" viewBox="0 0 34 19" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <rect width="4" height="22.937" rx="2"
                     transform="matrix(0.739039 0.673663 -0.739039 0.673663 16.9513 0)" fill="#D9D9D9" />

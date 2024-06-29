@@ -21,7 +21,7 @@ nav svg {
     height: 100vh;
     display: flex;
     justify-content: center;
-    background: rgba(0, 0, 0, 0.6);
+    background: rgba(0, 0, 0, 0.5);
 }
 
 h1 {

@@ -15,13 +15,23 @@ import { CanvasInput } from '../canvas-input';
     imports: [CanvasComponent, CommonModule, SliderModule, InputTextModule, FormsModule, ColorStopComponent]
 })
 export class DesignComponent {
+  menuVisible: boolean = true;  
 
+  mouseEffect: boolean = false;
 
-  newColorStop() {
+  //min/max range values for sliders
+  mouseRadMin: number = 20;
+  mouseRadMax: number = 500;
 
-  }
+  lineLengthMin: number = 1;
+  lineLengthMax: number = 200;
 
-  isVisible: boolean = true;  
+  lineWidthMin: number = 1;
+  lineWidthMax: number = 200;
+
+  gridSpaceMin: number = 4;
+  gridSpaceMax: number = 300;
+  
 
   //input object with default values
   canvasInputData: CanvasInput = {
@@ -32,29 +42,31 @@ export class DesignComponent {
     mouseRadius: 100
   };
 
-  updateMouseEffect(event: Event) {
-    const selectedEl = event.target as HTMLInputElement;
-    this.canvasInputData = { ...this.canvasInputData, mouseEffect: selectedEl.innerHTML }
-  }
-
-
   //function for adding slider number values
   updateValue(newVal: number, key: string) {
     if (newVal && this.valueInRange(newVal, key)) this.canvasInputData = { ...this.canvasInputData, [key]: newVal };
   }
 
+  updateMouseEffect(event: Event) {
+    
+    const selectedEl = event.target as HTMLInputElement;
+ 
+    this.mouseEffect = (selectedEl.innerHTML === 'none') ? false : true;
+    
+    this.canvasInputData = { ...this.canvasInputData, mouseEffect: selectedEl.innerHTML }
+  }
   //dont allow inputs in number input to be outide of slider range
   private valueInRange(value: number, key: string) {
     switch(key) {
       case 'gridSpacing':
-        return (value >= 4 && value <= 300)
+        return (value >= this.gridSpaceMin && value <= this.gridSpaceMax)
       case 'lineWidth':
-        return(value >= 1 && value <= 200)
-      case 'lineLenth':
-        return(value >= 1 && value <= 200)
+        return(value >= this.lineWidthMin && value <= this.lineWidthMax)
+      case 'lineLength':
+        return(value >= this.lineLengthMin && value <= this.lineLengthMax)
       case 'mouseRadius':
-        return(value >= 20 && value <= 500);
-      //...
+        return(value >= this.mouseRadMin && value <= this.mouseRadMax);
+      
     }
     return false;
   }
