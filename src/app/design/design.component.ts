@@ -40,7 +40,8 @@ export class DesignComponent {
     lineLength: 20,
     mouseEffect: 'none',
     mouseRadius: 100, 
-    colorList: []
+    colorList: [], 
+    animate: false
   };
 
   //function for adding slider number values
@@ -72,8 +73,11 @@ export class DesignComponent {
     return false;
   }
 
-  updateColorList(event: {id: number, color: string}[]) {
+  updateColorList(event: string[]) {
     this.canvasInputData = { ...this.canvasInputData, colorList: event }
-    console.log(this.canvasInputData);
+  }
+
+  toggleCanvasAnimation() {
+    this.canvasInputData = { ...this.canvasInputData, animate: !this.canvasInputData.animate }
   }
 }

@@ -24,8 +24,10 @@ export class CanvasComponent {
       lineLength: 20,
       mouseEffect: 'none',
       mouseRadius: 100,
-      colorList: []
+      colorList: [], 
+      animate: false
     };
+  
     this.ctx = this.canvas.nativeElement.getContext('2d')!;
     this.canvas.nativeElement.width = window.innerWidth;
     this.canvas.nativeElement.height = window.innerHeight;
@@ -71,7 +73,7 @@ class FlowFieldEffect {
   #timer: number;
   #cellSize: number; 
   #gradient: any;
-  #radius: number;
+  #domain: number;
   #vr: number;
   #recievedData: CanvasInput;
 
@@ -93,37 +95,50 @@ class FlowFieldEffect {
     this.#createGradient();
 
     this.#ctx.strokeStyle = this.#gradient;
-    this.#radius = 8;
+    this.#domain = 8;
     this.#vr = .03;
   }
 
   //color(s) for each line
   #createGradient() {
     this.#gradient = this.#ctx.createLinearGradient(0, 0, this.#width, this.#height);
-    this.#gradient.addColorStop('0.1', '#ff5c33');
-    this.#gradient.addColorStop('.2', '#ff66b3');
-    this.#gradient.addColorStop('.4', '#ccccff');
-    this.#gradient.addColorStop('.6', '#b3ffff');
-    this.#gradient.addColorStop('.8', '#80ff80');
-    this.#gradient.addColorStop('.9', '#ffff33');
+    const colorList = this.#recievedData.colorList;
+
+    if(colorList.length > 0) {
+      let colorStopPosition = (colorList.length === 1) ? 1 : ((.9) / (colorList.length -1));
+      let step = colorStopPosition;
+
+      for (let i = 0; i < colorList.length; i++) {
+        colorStopPosition = .1 + i * step;
+        console.log(colorStopPosition);
+        this.#gradient.addColorStop(colorStopPosition, colorList[i]);        
+      }
+    } else {
+      //default gradient
+      this.#gradient.addColorStop('0.1', '#ff5c33');
+      this.#gradient.addColorStop('.2', '#ff66b3');
+      this.#gradient.addColorStop('.4', '#ccccff');
+      this.#gradient.addColorStop('.6', '#b3ffff');
+      this.#gradient.addColorStop('.8', '#80ff80');
+      this.#gradient.addColorStop('1', '#ffff33');
+    }
   }
   
   #draw(angle: number, x: number, y: number) {
     let dx = mouse.x - x;
     let dy = mouse.y - y;
-
-    //hypotenuse
     let distance = Math.sqrt(dx * dx + dy * dy);
+    
     let maxDist: number | null;
     let length!: number;
     const radius = this.#recievedData.mouseRadius;
 
+    //mouse effect
     switch(this.#recievedData.mouseEffect) {
       case('none'):
         length = this.#recievedData.lineLength;
         break;
       case('lit'):
-      //if the
         maxDist = (distance > radius) ? 40 : null;
         length = (maxDist ?? distance) * (this.#recievedData.lineLength / 100);
         break;
@@ -136,7 +151,8 @@ class FlowFieldEffect {
 
     this.#ctx.beginPath();
     this.#ctx.moveTo(x, y);
-    this.#ctx.lineTo(x + Math.cos(angle) * length, y + Math.sin(angle) * length);
+    //make input for this whole argument
+    this.#ctx.lineTo(x + (angle) * length, y + (angle) * length);
     this.#ctx.stroke();
   }
   
@@ -148,19 +164,19 @@ class FlowFieldEffect {
     timeStamp = (timeStamp) ? timeStamp : 0;
   
     //get change in time between frames for smooth animation on all machines
-    let deltaTime = timeStamp - this.#lastTime;
+    const deltaTime = timeStamp - this.#lastTime;
     this.#lastTime = timeStamp;
 
     if (this.#timer > this.#interval) {
       this.#ctx.clearRect(0, 0, this.#width, this.#height)
-      this.#radius += this.#vr;
-      (this.#radius > 8 || this.#radius < -8 ) ? this.#vr *= -1 : '';
+      this.#domain += this.#vr;
+      (this.#domain > 8 || this.#domain < -8 ) ? this.#vr *= -1 : '';  
 
-      //call draw at each coordinate within window using angle for that coordinate and x, y position
+      //draw frame
       for (let y = 0; y < this.#height; y+= this.#cellSize) {
         for (let x = 0; x < this.#width; x+= this.#cellSize) {
-          //maybe let user enter info directly here as
-          const angle = (Math.cos(x * .01) + Math.sin(y * .01)) * this.#radius;
+          //make input for this whole arument except [* this.domain]
+          const angle = (Math.cos(x) + Math.sin(y));
           this.#draw(angle, x, y);
         }
       }
@@ -170,7 +186,7 @@ class FlowFieldEffect {
       this.#timer += deltaTime;
     }
     this.#flowFieldAnimation = requestAnimationFrame(this.animate.bind(this));
-    
+    if(!this.#recievedData.animate) this.stopAnimation(); 
   }
 
 }

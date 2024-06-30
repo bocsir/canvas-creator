@@ -14,7 +14,7 @@ export class ColorStopComponent {
 
 canAddColors: boolean = true;
 
-colorEls: {id: number, color: string}[] = []
+colorEls: string[] = []
 colorValues: string[] = [];
 id: number = 0;
 
@@ -28,11 +28,8 @@ removeColorStop(inputEl: HTMLInputElement, index: number) {
 
 //add to color array
 newColorStop() {
-  const tempColorObj = {
-    id : this.id++,
-    color: 'white',
-  }
-  this.colorEls.push(tempColorObj);
+
+  this.colorEls.push('white');
   this.canAddColors = (this.colorEls.length > 4) ? false : true;
 
   this.onColorChange.emit(this.colorEls);

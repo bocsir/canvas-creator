@@ -101,3 +101,17 @@ input[type=number] {
     border-radius: 5px;
     background-color: rgb(56, 55, 55);
 }
+
+#flexSwitchCheckDefault {
+    height: 23px;
+    width: 40px;
+    cursor: pointer;
+}
+
+.form-check {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: space-between;
+    
+}

@@ -23,6 +23,18 @@ $form-range-thumb-active-bg:               white;
 $form-range-thumb-disabled-bg:             $gray-500;
 $form-range-thumb-transition:              background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
 
+$form-check-input-checked-color:          white;
+$form-check-input-checked-bg-color:       transparent;
+$form-check-input-checked-border-color:   white;
+
+$form-check-input-indeterminate-color:    rgb(211, 91, 91);
+$form-check-input-bg:                     transparent;
+$form-check-input-border:                 1px solid rgb(255, 255, 255);
+$form-check-input-indeterminate-border-color:   white;
+$form-check-input-indeterminate-bg-image:       url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'><path fill='' stroke='#{$form-check-input-indeterminate-color}' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='M6 10h8'/></svg>");
+$form-check-input-focus-border:           white;
+$form-check-input-focus-box-shadow:       none;
+
 @import "../node_modules/bootstrap/scss/bootstrap";
 
 .btn-outline-primary {
@@ -35,6 +47,14 @@ $form-range-thumb-transition:              background-color .15s ease-in-out, bo
     border: 1px solid white !important; 
 }
 
+.form-switch .form-check-input:focus {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='rgba(255, 255, 255, .8)'/%3e%3c/svg%3e");
+}
+
+
+.form-switch .form-check-input {
+    --bs-form-switch-bg: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='rgba(255, 255, 255, .8)'/%3e%3c/svg%3e");
+}
 @font-face {
     font-family: 'kode';
     src: url(./app/assets/kode-mono.ttf);
@@ -59,7 +79,6 @@ canvas {
     top: 0;
     left: 0;
 }
-
 
 .cp-add-color-button-class {
     font-size: 10px !important;
