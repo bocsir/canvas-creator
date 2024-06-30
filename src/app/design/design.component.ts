@@ -17,7 +17,7 @@ import { CanvasInput } from '../canvas-input';
 export class DesignComponent {
   menuVisible: boolean = true;  
 
-  mouseEffect: boolean = false;
+  mEffect: boolean = false;
 
   //min/max range values for sliders
   mouseRadMin: number = 20;
@@ -39,7 +39,8 @@ export class DesignComponent {
     lineWidth: 2,
     lineLength: 20,
     mouseEffect: 'none',
-    mouseRadius: 100
+    mouseRadius: 100, 
+    colorList: []
   };
 
   //function for adding slider number values
@@ -51,8 +52,8 @@ export class DesignComponent {
     
     const selectedEl = event.target as HTMLInputElement;
  
-    this.mouseEffect = (selectedEl.innerHTML === 'none') ? false : true;
-    
+    this.mEffect = (selectedEl.innerHTML === 'none') ? false : true;
+
     this.canvasInputData = { ...this.canvasInputData, mouseEffect: selectedEl.innerHTML }
   }
   //dont allow inputs in number input to be outide of slider range
@@ -69,5 +70,10 @@ export class DesignComponent {
       
     }
     return false;
+  }
+
+  updateColorList(event: {id: number, color: string}[]) {
+    this.canvasInputData = { ...this.canvasInputData, colorList: event }
+    console.log(this.canvasInputData);
   }
 }

@@ -4,4 +4,5 @@ export interface CanvasInput {
     lineLength: number;
     mouseEffect: string;
     mouseRadius: number;
+    colorList: {id: number, color: string}[],
 }

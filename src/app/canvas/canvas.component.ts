@@ -24,6 +24,7 @@ export class CanvasComponent {
       lineLength: 20,
       mouseEffect: 'none',
       mouseRadius: 100,
+      colorList: []
     };
     this.ctx = this.canvas.nativeElement.getContext('2d')!;
     this.canvas.nativeElement.width = window.innerWidth;
@@ -127,7 +128,10 @@ class FlowFieldEffect {
         length = (maxDist ?? distance) * (this.#recievedData.lineLength / 100);
         break;
       case('dim'):
-
+        length = (distance > radius) 
+        ? this.#recievedData.lineLength 
+        : ((distance / radius) * .5 *  this.#recievedData.lineLength);
+        break;
     }
 
     this.#ctx.beginPath();

@@ -9,11 +9,9 @@
 }
 
 .gradient-color-pickers-container input {
-    width: 20%;
-    aspect-ratio: 1;
     border: transparent;
     outline: transparent;
-    border-radius: 10px;
+    border-radius: 8px;
     cursor: pointer;
     caret-color: transparent;
 }
@@ -23,10 +21,10 @@
 }
 
 .add-color-stop {
-    width: 20%;
+    width: 33px;
     aspect-ratio: 1;
-    border: 2px solid white;
-    border-radius: 10px;
+    border: 1px solid white;
+    border-radius: 8px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -35,4 +33,33 @@
 
 .add-color-stop:hover {
     scale: 1.05;
+}
+
+.add-color-stop {
+    width: 33px;
+    aspect-ratio: 1;
+}
+
+.color-stop-container {
+    position: relative;
+
+    width: 33px; 
+    aspect-ratio: 1;
+}
+
+.color-stop-container input {
+    width: 100%;
+    height: 100%;
+}
+
+.remove-color {
+    position: absolute;
+    top: -3px; 
+    left: -3px;
+    color: grey;
+}
+
+.remove-color:hover{
+    color: rgb(80, 80, 80);
+    cursor: pointer
 }

@@ -44,31 +44,6 @@
             </div>
 
             <div class="slider-container">
-                <label for="line-width" class="form-label">line width:
-                    <input 
-                        type="number"
-                        #lWidth="ngModel"
-                        [min]="lineWidthMin" 
-                        [max]="lineWidthMax"    
-                        [ngModel]="canvasInputData.lineWidth"
-                        (ngModelChange)="updateValue($event, 'lineWidth')">
-                </label>
-                <input 
-                    type="range" 
-                    class="form-range" 
-                    id="line-width"
-                    [min]="lineWidthMin" 
-                    [max]="lineWidthMax"    
-                    [ngModel]="canvasInputData.lineWidth" 
-                    (ngModelChange)="updateValue($event, 'lineWidth')">
-            
-                <div class="input-error" *ngIf="lWidth.invalid">
-                    <i class="fa-solid fa-triangle-exclamation"></i> 
-                    value should be between {{lineWidthMin}} and {{lineWidthMax}}
-                </div>    
-            </div>
-
-            <div class="slider-container">
                 <label for="line-length" class="form-label">line length:
                     <input 
                         type="number"
@@ -92,15 +67,41 @@
                     value should be between {{lineLengthMin}} and {{lineLengthMax}}
                 </div>    
             </div>
+            
             <div class="slider-container">
-                <app-color-stop></app-color-stop>
+                <label for="line-width" class="form-label">line width:
+                    <input 
+                        type="number"
+                        #lWidth="ngModel"
+                        [min]="lineWidthMin" 
+                        [max]="lineWidthMax"    
+                        [ngModel]="canvasInputData.lineWidth"
+                        (ngModelChange)="updateValue($event, 'lineWidth')">
+                </label>
+                <input 
+                    type="range" 
+                    class="form-range" 
+                    id="line-width"
+                    [min]="lineWidthMin" 
+                    [max]="lineWidthMax"    
+                    [ngModel]="canvasInputData.lineWidth" 
+                    (ngModelChange)="updateValue($event, 'lineWidth')">
+            
+                <div class="input-error" *ngIf="lWidth.invalid">
+                    <i class="fa-solid fa-triangle-exclamation"></i> 
+                    value should be between {{lineWidthMin}} and {{lineWidthMax}}
+                </div>    
+            </div>
+            
+            <div class="slider-container">
+                <app-color-stop (onColorChange)="updateColorList($event)"></app-color-stop>
             </div>
 
             <div class="slider-container">
                 <label class="form-label">mouse effect type: </label>
                 <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
-                    <label (click)="updateMouseEffect($event)" class="btn btn-outline-primary shadow-none" for="btnradio1">none</label>
                     <input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off" checked>
+                    <label (click)="updateMouseEffect($event)" class="btn btn-outline-primary shadow-none" for="btnradio1">none</label>
 
                     <input type="radio" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off">
                     <label (click)="updateMouseEffect($event)" class="btn btn-outline-primary shadow-none" for="btnradio2">dim</label>
@@ -110,7 +111,7 @@
                 </div>
 
             </div>
-            <div *ngIf="mouseEffect" class="slider-container">
+            <div *ngIf="mEffect" class="slider-container">
                 <label for="mouse-effect-range" class="form-label">mouse effect radius:
                     <input
                         type="number" 

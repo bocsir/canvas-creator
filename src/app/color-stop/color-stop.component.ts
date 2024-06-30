@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { ColorPickerModule } from 'ngx-color-picker';
 
 @Component({
@@ -10,16 +10,33 @@ import { ColorPickerModule } from 'ngx-color-picker';
   styleUrl: './color-stop.component.css'
 })
 export class ColorStopComponent {
-color: any;
+@Output() onColorChange = new EventEmitter<any>();
 
-colorEls: string[] = []
+canAddColors: boolean = true;
+
+colorEls: {id: number, color: string}[] = []
 colorValues: string[] = [];
 id: number = 0;
 
+removeColorStop(inputEl: HTMLInputElement, index: number) {
+  this.colorEls.splice(index, 1);
+  console.log(this.colorEls);
+  this.canAddColors = true;
+
+  this.onColorChange.emit(this.colorEls);
+}
+
 //add to color array
 newColorStop() {
-  this.colorEls.push(''+this.id);
-  this.id++;
+  const tempColorObj = {
+    id : this.id++,
+    color: 'white',
+  }
+  this.colorEls.push(tempColorObj);
+  this.canAddColors = (this.colorEls.length > 4) ? false : true;
+
+  this.onColorChange.emit(this.colorEls);
 }
+
 
 }
