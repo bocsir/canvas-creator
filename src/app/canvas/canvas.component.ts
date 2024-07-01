@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, ViewChild, ElementRef, HostListener, Input, OnChanges, SimpleChanges} from '@angular/core';
+import { Component, ViewChild, ElementRef, HostListener, Input, OnInit, OnChanges, SimpleChanges} from '@angular/core';
 import { CanvasInput } from '../canvas-input';
 
 @Component({
@@ -9,37 +9,50 @@ import { CanvasInput } from '../canvas-input';
   templateUrl: './canvas.component.html',
   styleUrl: './canvas.component.css'
 })
-export class CanvasComponent {
+export class CanvasComponent implements OnInit {
   //get canvas element
   @ViewChild('myCanvas', { static: true }) canvas!: ElementRef<HTMLCanvasElement>;
   ctx!: CanvasRenderingContext2D;
   flowField!: FlowFieldEffect;
 
+
   defaultInputData!: CanvasInput;
+  @Input() inputData!: CanvasInput;
+
   //initialize with defaults
-  ngOnInit(): void {
+  ngOnInit(): void { 
+    //dont run the rest if
+    //eg. only use defaults for home pages canvas
+    if (this.inputData){ return; }
+    this.ctx = this.canvas.nativeElement.getContext('2d')!;
+    this.canvas.nativeElement.width = window.innerWidth;
+    this.canvas.nativeElement.height = window.innerHeight;
+
     this.defaultInputData = {
       gridSpacing : 20,
       lineWidth: 2,
       lineLength: 20,
-      mouseEffect: 'none',
+      mouseEffect: 'dim',
       mouseRadius: 100,
       colorList: [], 
-      animate: false
+      animate: true,
+      angleFunc: '',
+      lineToXFunc:'',
+      lineToYFunc:''  
     };
   
-    this.ctx = this.canvas.nativeElement.getContext('2d')!;
-    this.canvas.nativeElement.width = window.innerWidth;
-    this.canvas.nativeElement.height = window.innerHeight;
     this.flowField = new FlowFieldEffect(this.defaultInputData, this.ctx, this.canvas.nativeElement.width, this.canvas.nativeElement.height)
-    this.flowField.animate(0);
+    this.flowField.animate();
   }
 
-  //new canvas input data
-  @Input() inputData!: CanvasInput;
+  //listen for changes in input data 
   ngOnChanges(): void {
-    if(!this.flowField) return;
-    this.flowField.stopAnimation();
+    this.canvas.nativeElement.width = window.innerWidth;
+    this.canvas.nativeElement.height = window.innerHeight;
+    this.ctx = this.canvas.nativeElement.getContext('2d')!;
+    if(this.flowField) {
+      this.flowField.stopAnimation();
+    }
     this.flowField = new FlowFieldEffect(this.inputData, this.ctx, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
     this.flowField.animate();
   }
@@ -63,6 +76,7 @@ export class CanvasComponent {
     mouse.y = event.y;
   }
 }
+
 class FlowFieldEffect {
   #ctx: CanvasRenderingContext2D;
   #width: number;
@@ -77,7 +91,9 @@ class FlowFieldEffect {
   #vr: number;
   #recievedData: CanvasInput;
 
+
   constructor(recievedData: CanvasInput, ctx: CanvasRenderingContext2D, width: number, height: number) {
+    console.log('recieved data: ', recievedData);
  
     this.#recievedData = recievedData;
     
@@ -97,6 +113,34 @@ class FlowFieldEffect {
     this.#ctx.strokeStyle = this.#gradient;
     this.#domain = 8;
     this.#vr = .03;
+
+    this.#formatTrig(this.#recievedData.angleFunc);
+    this.#formatTrig(this.#recievedData.lineToXFunc);
+    this.#formatTrig(this.#recievedData.lineToYFunc);
+
+    console.log()
+  }
+
+  //add 'math.' to all trig functions
+  //this function is gross
+  #formatTrig(str: string) {
+    let formattedStr = str;
+
+    if (formattedStr.includes('cos')){
+      formattedStr = formattedStr.replaceAll('cos', 'Math.cos');
+    } else if(formattedStr.includes('sin')){
+      formattedStr = formattedStr.replaceAll('sin', 'Math.sin');
+    } else if(formattedStr.includes('tan')) {
+      formattedStr = formattedStr.replaceAll('tan', 'Math.tan');
+    }
+
+    if(str === this.#recievedData.angleFunc) {
+      this.#recievedData.angleFunc = formattedStr;
+    } else if(str === this.#recievedData.lineToXFunc) {
+      this.#recievedData.lineToXFunc = formattedStr;
+    } else if (str === this.#recievedData.lineToYFunc) {
+      this.#recievedData.lineToYFunc = formattedStr;
+    }
   }
 
   //color(s) for each line
@@ -110,7 +154,6 @@ class FlowFieldEffect {
 
       for (let i = 0; i < colorList.length; i++) {
         colorStopPosition = .1 + i * step;
-        console.log(colorStopPosition);
         this.#gradient.addColorStop(colorStopPosition, colorList[i]);        
       }
     } else {
@@ -152,12 +195,13 @@ class FlowFieldEffect {
     this.#ctx.beginPath();
     this.#ctx.moveTo(x, y);
     //make input for this whole argument
+
     this.#ctx.lineTo(x + (angle) * length, y + (angle) * length);
     this.#ctx.stroke();
   }
   
   stopAnimation() {
-    cancelAnimationFrame(this.#flowFieldAnimation);
+      cancelAnimationFrame(this.#flowFieldAnimation);
   }
 
   animate(timeStamp?: number) {
@@ -172,11 +216,14 @@ class FlowFieldEffect {
       this.#domain += this.#vr;
       (this.#domain > 8 || this.#domain < -8 ) ? this.#vr *= -1 : '';  
 
+      if(!this.#recievedData.animate) {
+        this.#domain = 1;
+      }
       //draw frame
       for (let y = 0; y < this.#height; y+= this.#cellSize) {
         for (let x = 0; x < this.#width; x+= this.#cellSize) {
           //make input for this whole arument except [* this.domain]
-          const angle = (Math.cos(x) + Math.sin(y));
+          const angle = (Math.cos(x) + Math.sin(y)) * this.#domain;
           this.#draw(angle, x, y);
         }
       }
@@ -186,7 +233,6 @@ class FlowFieldEffect {
       this.#timer += deltaTime;
     }
     this.#flowFieldAnimation = requestAnimationFrame(this.animate.bind(this));
-    if(!this.#recievedData.animate) this.stopAnimation(); 
   }
 
 }

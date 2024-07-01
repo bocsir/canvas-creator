@@ -18,7 +18,7 @@
     </a>
     <div id="sidebar-container">
         <div class="sidebar" [ngClass]="{'small-width':!menuVisible}">
-            <div class="slider-container">
+            <div class="input-container">
                 <label for="grid-range" class="form-label">grid spacing:
                      <input 
                         type="number"
@@ -43,7 +43,7 @@
                 </div>
             </div>
 
-            <div class="slider-container">
+            <div class="input-container">
                 <label for="line-length" class="form-label">line length:
                     <input 
                         type="number"
@@ -68,7 +68,7 @@
                 </div>    
             </div>
             
-            <div class="slider-container">
+            <div class="input-container">
                 <label for="line-width" class="form-label">line width:
                     <input 
                         type="number"
@@ -93,11 +93,11 @@
                 </div>    
             </div>
             
-            <div class="slider-container">
+            <div class="input-container">
                 <app-color-stop (onColorChange)="updateColorList($event)"></app-color-stop>
             </div>
 
-            <div class="slider-container">
+            <div class="input-container">
                 <label class="form-label">mouse effect type: </label>
                 <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
                     <input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off" checked>
@@ -111,7 +111,7 @@
                 </div>
 
             </div>
-            <div *ngIf="mEffect" class="slider-container">
+            <div *ngIf="mEffect" class="input-container">
                 <label for="mouse-effect-range" class="form-label">mouse effect radius:
                     <input
                         type="number" 
@@ -135,13 +135,32 @@
                     value should be between {{mouseRadMin}} and {{mouseRadMax}}
                 </div>
             </div>
-            <div class="slider-container">
+            <div class="input-container">
                 <div class="form-check form-switch">                
                     <label class="form-check-label" for="flexSwitchCheckDefault">animate canvas:</label>
                     <input (click)="toggleCanvasAnimation()" class="form-check-input shadow-none" type="checkbox" id="flexSwitchCheckDefault">
                 </div>
             </div>
-    
+            <div class="function-inputs">
+                <div class="input-container">
+                    <label for="angle-function">angle: </label>
+                    <input type="text" class="text-input" id="angle-function">
+                </div>
+
+                <div class="input-container">
+                    <label for="line-x-function">line to x: </label>
+                    <input [(ngModel)]="lineToX" type="text" class="text-input" id="line-x-function">
+                </div>
+
+                <div class="input-container">
+                    <label for="line-y-function">line to y: </label>
+                    <input [(ngModel)]="lineToY" type="text" class="text-input" id="line-y-function">
+                </div>
+
+                <div id="function-explanation">Lines will be drawn at length specified by line length and at angle specified by angle function.<br> Patterns emerge from an angle function where the position on the grid is referenced</div>
+
+            </div>
+
         </div>
 
         <div class="pull-tab-container">

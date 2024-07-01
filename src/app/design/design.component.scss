@@ -72,24 +72,24 @@ input[type=number] {
 }
 
 
-.slider-container label{
+.input-container label{
     font-size: .8rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
-.slider-container label input {
+.input-container label input {
     width: 2rem;
     height: 1.6rem;
     font-weight: 650;
 }
 
-.slider-container .form-range {
+.input-container .form-range {
     cursor: pointer;
 }
 
-.slider-container {
+.input-container {
     margin-bottom: 15px;
     font-size: .8rems
 }
@@ -114,4 +114,27 @@ input[type=number] {
     display: flex;
     justify-content: space-between;
     
+}
+
+.text-input {
+    width: 100%;
+    max-width: 100%;
+    height: fit-content;
+    border-radius: 5px;
+    border: none;
+    padding: 5px;
+    font-size: .8rem;
+}
+
+.text-input:focus, .text-input:active {
+    outline: none;
+    border: none;
+}
+
+#function-explanation {
+    font-size: .7rem;
+    background-color: 
+    rgb(56, 55, 55); 
+    border-radius: 5px; 
+    padding: 5px;
 }

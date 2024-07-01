@@ -9,18 +9,17 @@
             <path fill-rule="evenodd" clip-rule="evenodd" d="M41.3216 43.3011L4.98895 43.3038L3.00001 46.0068L43.3103 46.0038L41.3216 43.3011ZM55.7987 43.3906L56 43.3L55.7987 43.3V43.3906Z" fill="#D9D9D9"/>
             </svg>
             
-        <h2>name</h2>
+        <h2></h2>
     </a>
 
 </nav>
 
 <div>
-    <section id="cta-container">
+    <section class="cta-container" [ngClass]="{'show-canvas' : brightenCanvas}">
         <app-canvas></app-canvas>
-        <div id="cta">
-            <h1>Generate a customizable graphic with the HTML5 Canvas API</h1> 
+        <div id="cta" [ngClass]="{'show-background' : brightenCanvas}">
+            <h1>Generate a customizable graphic with the HTML5 Canvas API<span (mouseenter)="brightenCanvas = true" (mouseleave)="brightenCanvas = false">(like this one!)</span></h1> 
             <div class="btn-container">
-                 
                 <a routerLink="/design" routerLinkActive="active" ariaCurrentWhenActive="page">
                     <p class="cta-btn-text">start now<i class="fa-solid fa-arrow-right"></i></p>
                 </a>

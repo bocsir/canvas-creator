@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit} from '@angular/core';
 import { CanvasComponent } from "../canvas/canvas.component";
 import { CommonModule } from '@angular/common';
 import { InputTextModule } from 'primeng/inputtext';
@@ -32,16 +32,22 @@ export class DesignComponent {
   gridSpaceMin: number = 4;
   gridSpaceMax: number = 300;
   
+  lineToX: string = 'cos(x)';
+
+  lineToY: string = '';
 
   //input object with default values
   canvasInputData: CanvasInput = {
     gridSpacing: 20,
     lineWidth: 2,
-    lineLength: 20,
+    lineLength: 2,
     mouseEffect: 'none',
     mouseRadius: 100, 
-    colorList: [], 
-    animate: false
+    colorList: ['rgb(255,255,255)'], 
+    animate: false, 
+    angleFunc: '',
+    lineToXFunc: this.lineToX,
+    lineToYFunc: this.lineToY
   };
 
   //function for adding slider number values
@@ -80,4 +86,5 @@ export class DesignComponent {
   toggleCanvasAnimation() {
     this.canvasInputData = { ...this.canvasInputData, animate: !this.canvasInputData.animate }
   }
+  
 }

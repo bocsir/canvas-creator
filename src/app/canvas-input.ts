@@ -6,4 +6,7 @@ export interface CanvasInput {
     mouseRadius: number;
     colorList: string[],
     animate: boolean,
+    angleFunc: string,
+    lineToXFunc: string, 
+    lineToYFunc: string
 }

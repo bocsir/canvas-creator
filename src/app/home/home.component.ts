@@ -16,6 +16,8 @@ scrollDown(): void {
 }
   isHovering = false;
 
+  brightenCanvas = false;
+
   allowHoverEvents() {
     this.isHovering = true;
   }
@@ -23,5 +25,6 @@ scrollDown(): void {
   ignorePointerEvents() {
     this.isHovering = false;
   }
+
 
 }
