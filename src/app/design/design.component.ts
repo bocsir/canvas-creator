@@ -1,4 +1,4 @@
-import { Component, OnInit} from '@angular/core';
+import { Component, OnChanges, SimpleChange, SimpleChanges } from '@angular/core';
 import { CanvasComponent } from "../canvas/canvas.component";
 import { CommonModule } from '@angular/common';
 import { InputTextModule } from 'primeng/inputtext';
@@ -32,9 +32,9 @@ export class DesignComponent {
   gridSpaceMin: number = 4;
   gridSpaceMax: number = 300;
   
-  lineToX: string = 'cos(x)';
-
-  lineToY: string = '';
+  angleFunc: string = 'cos(x * .01) + sin(y * .01)';
+  lineToX: string = 'x + cos(angle) * length';
+  lineToY: string = 'y + sin(angle) * length';
 
   //input object with default values
   canvasInputData: CanvasInput = {
@@ -45,26 +45,28 @@ export class DesignComponent {
     mouseRadius: 100, 
     colorList: ['rgb(255,255,255)'], 
     animate: false, 
-    angleFunc: '',
+    angleFunc: this.angleFunc,
     lineToXFunc: this.lineToX,
     lineToYFunc: this.lineToY
   };
 
   //function for adding slider number values
-  updateValue(newVal: number, key: string) {
-    if (newVal && this.valueInRange(newVal, key)) this.canvasInputData = { ...this.canvasInputData, [key]: newVal };
+  updateValue(newVal: number | string , key: string) {
+
+    if (this.valueIsValid(newVal, key)) {
+      this.canvasInputData = { ...this.canvasInputData, [key]: newVal }
+    }
   }
 
-  updateMouseEffect(event: Event) {
-    
+  //get mouse effect and update canvas object with it
+  updateMouseEffect(event: Event) {  
     const selectedEl = event.target as HTMLInputElement;
- 
     this.mEffect = (selectedEl.innerHTML === 'none') ? false : true;
-
     this.canvasInputData = { ...this.canvasInputData, mouseEffect: selectedEl.innerHTML }
   }
+
   //dont allow inputs in number input to be outide of slider range
-  private valueInRange(value: number, key: string) {
+  private valueIsValid(value: any, key: string) {
     switch(key) {
       case 'gridSpacing':
         return (value >= this.gridSpaceMin && value <= this.gridSpaceMax)
@@ -74,8 +76,14 @@ export class DesignComponent {
         return(value >= this.lineLengthMin && value <= this.lineLengthMax)
       case 'mouseRadius':
         return(value >= this.mouseRadMin && value <= this.mouseRadMax);
-      
+      case 'angleFunc': 
+        return true;
+      case 'lineToXFunc': 
+        return true;
+      case 'lineToYFunx':
+        return true;  
     }
+
     return false;
   }
 

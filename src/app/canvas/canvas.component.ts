@@ -28,6 +28,7 @@ export class CanvasComponent implements OnInit {
     this.canvas.nativeElement.width = window.innerWidth;
     this.canvas.nativeElement.height = window.innerHeight;
 
+    //home page canvas object
     this.defaultInputData = {
       gridSpacing : 20,
       lineWidth: 2,
@@ -36,17 +37,18 @@ export class CanvasComponent implements OnInit {
       mouseRadius: 100,
       colorList: [], 
       animate: true,
-      angleFunc: '',
-      lineToXFunc:'',
-      lineToYFunc:''  
+      angleFunc: 'cos(x * .01) + sin(y * .01)',
+      lineToXFunc: 'x + cos(angle) * length',
+      lineToYFunc: 'y + sin(angle) * length'  
     };
   
     this.flowField = new FlowFieldEffect(this.defaultInputData, this.ctx, this.canvas.nativeElement.width, this.canvas.nativeElement.height)
     this.flowField.animate();
   }
 
-  //listen for changes in input data 
+  //listen for changes on component @Input
   ngOnChanges(): void {
+    console.log(this.inputData);
     this.canvas.nativeElement.width = window.innerWidth;
     this.canvas.nativeElement.height = window.innerHeight;
     this.ctx = this.canvas.nativeElement.getContext('2d')!;
@@ -92,9 +94,7 @@ class FlowFieldEffect {
   #recievedData: CanvasInput;
 
 
-  constructor(recievedData: CanvasInput, ctx: CanvasRenderingContext2D, width: number, height: number) {
-    console.log('recieved data: ', recievedData);
- 
+  constructor(recievedData: CanvasInput, ctx: CanvasRenderingContext2D, width: number, height: number) { 
     this.#recievedData = recievedData;
     
     this.#ctx = ctx;
@@ -118,22 +118,26 @@ class FlowFieldEffect {
     this.#formatTrig(this.#recievedData.lineToXFunc);
     this.#formatTrig(this.#recievedData.lineToYFunc);
 
-    console.log()
+    console.log('recieved and formatted data: ', this.#recievedData);
   }
 
   //add 'math.' to all trig functions
-  //this function is gross
+  //this function is ugly :/
   #formatTrig(str: string) {
     let formattedStr = str;
 
-    if (formattedStr.includes('cos')){
+    //if there is a trig function not preceded by '.' => append Math.
+    if (formattedStr.includes('cos') && ((formattedStr[formattedStr.indexOf('cos')-1]) !== '.')){
       formattedStr = formattedStr.replaceAll('cos', 'Math.cos');
-    } else if(formattedStr.includes('sin')){
+    } 
+    if(formattedStr.includes('sin') && ((formattedStr[formattedStr.indexOf('sin')-1]) !== '.')){
       formattedStr = formattedStr.replaceAll('sin', 'Math.sin');
-    } else if(formattedStr.includes('tan')) {
+    }
+    if(formattedStr.includes('tan') && ((formattedStr[formattedStr.indexOf('tan')-1]) !== '.')) {
       formattedStr = formattedStr.replaceAll('tan', 'Math.tan');
     }
 
+    //replace function string with new formatted string
     if(str === this.#recievedData.angleFunc) {
       this.#recievedData.angleFunc = formattedStr;
     } else if(str === this.#recievedData.lineToXFunc) {
@@ -194,9 +198,13 @@ class FlowFieldEffect {
 
     this.#ctx.beginPath();
     this.#ctx.moveTo(x, y);
-    //make input for this whole argument
 
-    this.#ctx.lineTo(x + (angle) * length, y + (angle) * length);
+    //evaluate string inputs for lineTo
+    //find different method than eval
+    const lineToX = eval(this.#recievedData.lineToXFunc);
+    const lineToY = eval(this.#recievedData.lineToYFunc);
+
+    this.#ctx.lineTo(lineToX, lineToY);
     this.#ctx.stroke();
   }
   
@@ -216,14 +224,15 @@ class FlowFieldEffect {
       this.#domain += this.#vr;
       (this.#domain > 8 || this.#domain < -8 ) ? this.#vr *= -1 : '';  
 
+      //shoul have a slider for this and call it effectMultiplier or the like
       if(!this.#recievedData.animate) {
-        this.#domain = 1;
+        this.#domain = 2;
       }
       //draw frame
       for (let y = 0; y < this.#height; y+= this.#cellSize) {
         for (let x = 0; x < this.#width; x+= this.#cellSize) {
           //make input for this whole arument except [* this.domain]
-          const angle = (Math.cos(x) + Math.sin(y)) * this.#domain;
+          const angle = (Math.cos(x * .01) + Math.sin(y * .01)) * this.#domain;
           this.#draw(angle, x, y);
         }
       }
