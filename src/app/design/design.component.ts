@@ -80,7 +80,7 @@ export class DesignComponent {
         return true;
       case 'lineToXFunc': 
         return true;
-      case 'lineToYFunx':
+      case 'lineToYFunc':
         return true;  
     }
 

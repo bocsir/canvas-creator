@@ -232,7 +232,7 @@ class FlowFieldEffect {
       for (let y = 0; y < this.#height; y+= this.#cellSize) {
         for (let x = 0; x < this.#width; x+= this.#cellSize) {
           //make input for this whole arument except [* this.domain]
-          const angle = (Math.cos(x * .01) + Math.sin(y * .01)) * this.#domain;
+          const angle = (eval(this.#recievedData.angleFunc)) * this.#domain;
           this.#draw(angle, x, y);
         }
       }
