@@ -19,11 +19,9 @@
         <app-canvas></app-canvas>
         <div id="cta" [ngClass]="{'show-background' : brightenCanvas}">
             <h1>Generate a customizable graphic with the HTML5 Canvas API<span (mouseenter)="brightenCanvas = true" (mouseleave)="brightenCanvas = false">(like this one!)</span></h1> 
-            <div class="btn-container">
-                <a routerLink="/design" routerLinkActive="active" ariaCurrentWhenActive="page">
-                    <p class="cta-btn-text">start now<i class="fa-solid fa-arrow-right"></i></p>
-                </a>
-            </div>
+                <button routerLink="/design" routerLinkActive="active" ariaCurrentWhenActive="page">
+                    <span class="button-top">start now<i class="fa-solid fa-arrow-right"></i></span>
+                </button>
         </div>
         <svg (click)="scrollDown()" id="up-arrow" width="34" height="19" viewBox="0 0 34 19" fill="none" xmlns="http://www.w3.org/2000/svg">
             <rect width="4" height="22.937" rx="2" transform="matrix(0.739039 0.673663 -0.739039 0.673663 16.9513 0)" fill="#D9D9D9"/>

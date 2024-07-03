@@ -21,7 +21,7 @@ nav svg {
     height: 100vh;
     display: flex;
     justify-content: center;
-    background: rgba(0, 0, 0, 0.6);
+    background: rgba(0, 0, 0, 0.733);
 }
 
 .show-canvas {
@@ -29,9 +29,9 @@ nav svg {
 }
 
 h1 {
-    font-size: 3rem;
+    font-size: 4rem;
     text-align: left;
-    max-width: 700px;
+    max-width: 885px;
     cursor: default; 
 }
 
@@ -65,33 +65,48 @@ h1 span {
     align-items: center;
 }
 
-.btn-container a {
-    text-decoration: none;
-    color: white;
-    height: 100%;
-    display: flex;
-    align-items: center;
-}
-
-.cta-btn-text {
-    margin: 0;
-}
-
-.btn-container:hover {
-    background: rgba(64, 64, 165, .8);
-    color: rgba(255, 255, 255, 0.568);
-}
-
-
-#up-arrow {
-    position: absolute;
-    top: 96%;
-    cursor: pointer;
-}
-
 .fa-arrow-right {
     font-size: 1rem;
     position: relative;
     left: .5rem;
     padding-right: 10px;
+}
+button {
+    /* Variables */
+    --button_radius: 0.75em;
+    --button_color: black;
+    --button_outline_color: #e8e8e8;
+    font-size: 17px;
+    font-weight: bold;
+    border: none;
+    border-radius: var(--button_radius);
+    background: var(--button_outline_color);
+  }
+  
+  .button-top {
+    display: block;
+    box-sizing: border-box;
+    border: 2px solid var(--button_outline_color);
+    border-radius: var(--button_radius);
+    padding: 0.75em 1.5em;
+    background: var(--button_color);
+    color: var(--button_outline_color);
+    transform: translateY(-0.2em);
+    transition: transform 0.1s ease;
+  }
+  
+  button:hover .button-top {
+    /* Pull the button upwards when hovered */
+    transform: translateY(-0.33em);
+  }
+  
+  button:active .button-top {
+    /* Push the button downwards when pressed */
+    transform: translateY(0);
+  }
+
+#up-arrow {
+    position: absolute;
+    top: 96%;
+    cursor: pointer;
 }

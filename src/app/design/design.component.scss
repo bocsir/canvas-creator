@@ -132,9 +132,21 @@ input[type=number] {
 }
 
 #function-explanation {
+    position: relative;
     font-size: .7rem;
     background-color: 
     rgb(56, 55, 55); 
     border-radius: 5px; 
     padding: 5px;
+    padding-top: 10px;
+}
+
+.fa-circle-info {
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+
+.hide-func-explanation {
+    display: none;
 }

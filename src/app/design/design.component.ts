@@ -15,6 +15,7 @@ import { CanvasInput } from '../canvas-input';
     imports: [CanvasComponent, CommonModule, SliderModule, InputTextModule, FormsModule, ColorStopComponent]
 })
 export class DesignComponent {
+  hideExplanation: boolean = false;
   menuVisible: boolean = true;  
 
   mEffect: boolean = false;

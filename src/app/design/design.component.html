@@ -156,8 +156,9 @@
                     <label for="line-y-function">line to y: </label>
                     <input [(ngModel)]="lineToY" (keyup)="updateValue(lineToY, 'lineToYFunc')" type="text" class="text-input" id="line-y-function">
                 </div>
-
-                <div id="function-explanation">Lines will be drawn at length specified by [line length] with angle specified by [angle].<br> Patterns emerge from an angle function where the (x,y) position on the grid is referenced</div>
+                
+                <i (click)="hideExplanation = !hideExplanation" class="fa-solid fa-circle-info"></i>
+                <div id="function-explanation" [ngClass]="{'hide-func-explanation': hideExplanation}">Lines will be drawn at length specified by [line length] with angle specified by [angle].<br> Patterns emerge from an angle function where [length] and (x,y) position on the grid is referenced</div>
 
             </div>
 
