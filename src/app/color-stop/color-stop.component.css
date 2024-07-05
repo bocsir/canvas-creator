@@ -6,6 +6,8 @@
 .gradient-color-pickers-container {
     display: flex;
     gap: 5px;
+    height: 33px;
+    text-align: center;
 }
 
 .gradient-color-pickers-container input {
@@ -41,10 +43,12 @@
 }
 
 .color-stop-container {
-    position: relative;
-
     width: 33px; 
     aspect-ratio: 1;
+}
+
+.open {
+    position: absolute;
 }
 
 .color-stop-container input {
@@ -53,13 +57,18 @@
 }
 
 .remove-color {
-    position: absolute;
-    top: -3px; 
-    left: -3px;
+    position: relative;
+    top: -120%;
+    left: -40%; 
     color: grey;
+    z-index: 100;
 }
 
 .remove-color:hover{
     color: rgb(80, 80, 80);
     cursor: pointer
+}
+
+* {
+    overflow: visible;
 }

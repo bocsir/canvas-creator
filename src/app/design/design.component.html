@@ -1,23 +1,23 @@
 <main>
-    <a class="logo" href="/">
-        <svg width="56" height="52" viewBox="0 0 56 52" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path fill-rule="evenodd" clip-rule="evenodd" d="M42.3333 46L24 26L5.66666 46H2L24 22L46 46H42.3333Z"
-                fill="#D9D9D9" />
-            <path fill-rule="evenodd" clip-rule="evenodd"
-                d="M12 13L23.9737 26L35.9474 13H32.2632L23.9737 22L15.6842 13H12Z" fill="#D9D9D9" />
-            <path fill-rule="evenodd" clip-rule="evenodd"
-                d="M35.9474 13L23.9737 -2.8193e-05L12 13H15.6842L23.9737 3.99997L32.2632 13H35.9474Z" fill="#D9D9D9" />
-            <path fill-rule="evenodd" clip-rule="evenodd"
-                d="M24 40.9974L4.66023 20L7.62939e-06 25.0736L24 51.1308L24 40.9974Z" fill="#D9D9D9" />
-            <path fill-rule="evenodd" clip-rule="evenodd" d="M24 40.9974L43.3398 20L48 25.0736L24 51.1308L24 40.9974Z"
-                fill="#D9D9D9" />
-            <path fill-rule="evenodd" clip-rule="evenodd"
-                d="M41.3216 43.3011L4.98895 43.3038L3.00001 46.0068L43.3103 46.0038L41.3216 43.3011ZM55.7987 43.3906L56 43.3L55.7987 43.3V43.3906Z"
-                fill="#D9D9D9" />
-        </svg>
-    </a>
     <div id="sidebar-container">
         <div class="sidebar" [ngClass]="{'small-width':!menuVisible}">
+            <a class="logo" href="/">
+                <svg width="56" height="52" viewBox="0 0 56 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M42.3333 46L24 26L5.66666 46H2L24 22L46 46H42.3333Z"
+                        fill="#D9D9D9" />
+                    <path fill-rule="evenodd" clip-rule="evenodd"
+                        d="M12 13L23.9737 26L35.9474 13H32.2632L23.9737 22L15.6842 13H12Z" fill="#D9D9D9" />
+                    <path fill-rule="evenodd" clip-rule="evenodd"
+                        d="M35.9474 13L23.9737 -2.8193e-05L12 13H15.6842L23.9737 3.99997L32.2632 13H35.9474Z" fill="#D9D9D9" />
+                    <path fill-rule="evenodd" clip-rule="evenodd"
+                        d="M24 40.9974L4.66023 20L7.62939e-06 25.0736L24 51.1308L24 40.9974Z" fill="#D9D9D9" />
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M24 40.9974L43.3398 20L48 25.0736L24 51.1308L24 40.9974Z"
+                        fill="#D9D9D9" />
+                    <path fill-rule="evenodd" clip-rule="evenodd"
+                        d="M41.3216 43.3011L4.98895 43.3038L3.00001 46.0068L43.3103 46.0038L41.3216 43.3011ZM55.7987 43.3906L56 43.3L55.7987 43.3V43.3906Z"
+                        fill="#D9D9D9" />
+                </svg>
+            </a>
             <div class="input-container">
                 <label for="grid-range" class="form-label">grid spacing:
                      <input 
@@ -93,11 +93,11 @@
                 </div>    
             </div>
             
-            <div class="input-container">
+            <div class="input-container" id="color-stop-container">
                 <app-color-stop (onColorChange)="updateColorList($event)"></app-color-stop>
-            </div>
+            </div>    
 
-            <div class="input-container">
+            <div class="input-container" id="mouse-effect-container">
                 <label class="form-label">mouse effect type: </label>
                 <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
                     <input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off" checked>
@@ -156,11 +156,9 @@
                     <label for="line-y-function">line to y: </label>
                     <input [(ngModel)]="lineToY" (keyup)="updateValue(lineToY, 'lineToYFunc')" type="text" class="text-input" id="line-y-function">
                 </div>
-                
-                <i (click)="hideExplanation = !hideExplanation" class="fa-solid fa-circle-info"></i>
-                <div id="function-explanation" [ngClass]="{'hide-func-explanation': hideExplanation}">Lines will be drawn at length specified by [line length] with angle specified by [angle].<br> Patterns emerge from an angle function where [length] and (x,y) position on the grid is referenced</div>
-
             </div>
+            <i (click)="hideExplanation = !hideExplanation" class="fa-solid fa-circle-info"></i>
+            <div id="function-explanation" [ngClass]="{'hide-func-explanation': hideExplanation}">Lines will be drawn at length specified by [line length] with angle specified by [angle].<br> Patterns emerge from an angle function where [length] and (x,y) position on the grid is referenced</div>
 
         </div>
 

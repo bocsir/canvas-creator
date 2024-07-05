@@ -28,10 +28,10 @@ removeColorStop(inputEl: HTMLInputElement, index: number) {
 
 //add to color array
 newColorStop() {
+  //hide color add button if 5 colors 
+  this.canAddColors = (this.colorEls.length > 2) ? false : true;
 
   this.colorEls.push('white');
-  this.canAddColors = (this.colorEls.length > 4) ? false : true;
-
   this.onColorChange.emit(this.colorEls);
 }
 

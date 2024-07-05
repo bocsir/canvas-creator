@@ -1,6 +1,6 @@
 <label id="gradient-label">line color(s):</label>
 <div class="gradient-color-pickers-container">
-    <div *ngFor="let colorID of colorEls;let i=index" class="color-stop-container">
+    <div *ngFor="let colorID of colorEls; let i=index" class="color-stop-container">
         <input 
         #colorInput
         [id]="colorID" [style.background]="colorEls[i]" [cpWidth]="'280px'" [cpAlphaChannel]="'always'"
@@ -9,7 +9,8 @@
         [cpMaxPresetColorsLength]="16"
         [cpAddColorButton]="true" 
         [(colorPicker)]="colorEls[i]" 
-        (colorPickerChange)="onColorChange.emit(this.colorEls)"/>
+        (colorPickerChange)="onColorChange.emit(this.colorEls)"
+        />
 
         <i class="fa-solid fa-circle-minus remove-color" (click)="removeColorStop(colorInput, i)"></i>
     </div>
