@@ -110,3 +110,30 @@ button {
     top: 96%;
     cursor: pointer;
 }
+
+
+.canvas-card {
+    height: 300px;
+    aspect-ratio: 1.6;
+    background: rgba(228, 224, 230, .3);
+    box-shadow: inset 0px 0px 30px 20px rgba(228, 224, 230, .4);
+    border-radius: 30px;
+    transition: background 1s, box-shadow 1s, scale 1s;
+    overflow: hidden;
+    position: relative;
+}
+
+#card1 {
+    left: 3%;
+    top: 5%;
+}
+
+#card2 {
+    left: 58%;
+    top: 15%;
+}
+
+.canvas-card:hover {
+    background: linear-gradient(34deg, rgba(225,215,231,.2) 0%, rgba(255,248,248,.05) 45%, rgba(237,230,230,.2) 100%); 
+    box-shadow: inset 0px 0px 10px 10px rgba(228, 224, 230, .5);
+}

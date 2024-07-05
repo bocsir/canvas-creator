@@ -35,5 +35,9 @@ newColorStop() {
   this.onColorChange.emit(this.colorEls);
 }
 
+updateColorStop(index: number, event: string) {
+  this.colorEls[index] = event;
+  this.onColorChange.emit(this.colorEls);
+}
 
 }

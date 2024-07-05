@@ -1,23 +1,26 @@
 <main>
     <div id="sidebar-container">
         <div class="sidebar" [ngClass]="{'small-width':!menuVisible}">
-            <a class="logo" href="/">
-                <svg width="56" height="52" viewBox="0 0 56 52" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path fill-rule="evenodd" clip-rule="evenodd" d="M42.3333 46L24 26L5.66666 46H2L24 22L46 46H42.3333Z"
-                        fill="#D9D9D9" />
-                    <path fill-rule="evenodd" clip-rule="evenodd"
-                        d="M12 13L23.9737 26L35.9474 13H32.2632L23.9737 22L15.6842 13H12Z" fill="#D9D9D9" />
-                    <path fill-rule="evenodd" clip-rule="evenodd"
-                        d="M35.9474 13L23.9737 -2.8193e-05L12 13H15.6842L23.9737 3.99997L32.2632 13H35.9474Z" fill="#D9D9D9" />
-                    <path fill-rule="evenodd" clip-rule="evenodd"
-                        d="M24 40.9974L4.66023 20L7.62939e-06 25.0736L24 51.1308L24 40.9974Z" fill="#D9D9D9" />
-                    <path fill-rule="evenodd" clip-rule="evenodd" d="M24 40.9974L43.3398 20L48 25.0736L24 51.1308L24 40.9974Z"
-                        fill="#D9D9D9" />
-                    <path fill-rule="evenodd" clip-rule="evenodd"
-                        d="M41.3216 43.3011L4.98895 43.3038L3.00001 46.0068L43.3103 46.0038L41.3216 43.3011ZM55.7987 43.3906L56 43.3L55.7987 43.3V43.3906Z"
-                        fill="#D9D9D9" />
-                </svg>
-            </a>
+            <div class="logo-container">
+                <a class="logo" href="/">
+                    <svg width="56" height="52" viewBox="0 0 56 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M42.3333 46L24 26L5.66666 46H2L24 22L46 46H42.3333Z"
+                            fill="#D9D9D9" />
+                        <path fill-rule="evenodd" clip-rule="evenodd"
+                            d="M12 13L23.9737 26L35.9474 13H32.2632L23.9737 22L15.6842 13H12Z" fill="#D9D9D9" />
+                        <path fill-rule="evenodd" clip-rule="evenodd"
+                            d="M35.9474 13L23.9737 -2.8193e-05L12 13H15.6842L23.9737 3.99997L32.2632 13H35.9474Z" fill="#D9D9D9" />
+                        <path fill-rule="evenodd" clip-rule="evenodd"
+                            d="M24 40.9974L4.66023 20L7.62939e-06 25.0736L24 51.1308L24 40.9974Z" fill="#D9D9D9" />
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M24 40.9974L43.3398 20L48 25.0736L24 51.1308L24 40.9974Z"
+                            fill="#D9D9D9" />
+                        <path fill-rule="evenodd" clip-rule="evenodd"
+                            d="M41.3216 43.3011L4.98895 43.3038L3.00001 46.0068L43.3103 46.0038L41.3216 43.3011ZM55.7987 43.3906L56 43.3L55.7987 43.3V43.3906Z"
+                            fill="#D9D9D9" />
+                    </svg>
+                </a>
+                <h2>edit canvas</h2>
+            </div>
             <div class="input-container">
                 <label for="grid-range" class="form-label">grid spacing:
                      <input 
@@ -141,7 +144,31 @@
                     <input (click)="toggleCanvasAnimation()" class="form-check-input shadow-none" type="checkbox" id="flexSwitchCheckDefault">
                 </div>
             </div>
+            <div *ngIf="animating" class="input-container" id="speed-input">
+                <label for="grid-range" class="form-label">speed:
+                    <input 
+                       type="number"
+                       #speed="ngModel"
+                       [min]="speedMin" 
+                       [max]="speedMax"    
+                       [ngModel]="canvasInputData.speed"
+                       (ngModelChange)="updateValue($event, 'speed')">
+               </label>
+                <input 
+                type="range" 
+                class="form-range" 
+                id="grid-range" 
+                [min]="speedMin" 
+                [max]="speedMax"
+                [ngModel]="canvasInputData.speed" 
+                (ngModelChange)="updateValue($event, 'speed')">
+    
+            </div>
+
             <div class="function-inputs">
+                <span>function inputs <i (click)="hideExplanation = !hideExplanation" class="fa-solid fa-circle-info"></i></span>
+                <div id="function-explanation" [ngClass]="{'hide-func-explanation': hideExplanation}">Lines will be drawn at length specified by [line length] with angle specified by [angle].<br> Patterns emerge from an angle function where [length] and (x,y) position on the grid is referenced</div>
+    
                 <div class="input-container">
                     <label for="angle-function">angle: </label>
                     <input [(ngModel)]="angleFunc" (keyup)="updateValue(angleFunc, 'angleFunc')" type="text" class="text-input" id="angle-function">
@@ -157,8 +184,9 @@
                     <input [(ngModel)]="lineToY" (keyup)="updateValue(lineToY, 'lineToYFunc')" type="text" class="text-input" id="line-y-function">
                 </div>
             </div>
-            <i (click)="hideExplanation = !hideExplanation" class="fa-solid fa-circle-info"></i>
-            <div id="function-explanation" [ngClass]="{'hide-func-explanation': hideExplanation}">Lines will be drawn at length specified by [line length] with angle specified by [angle].<br> Patterns emerge from an angle function where [length] and (x,y) position on the grid is referenced</div>
+
+            <button class="save-canvas">Save Design <i class="fa-regular fa-bookmark"></i></button>
+            <button class="save-canvas">Export As <i class="fa-regular fa-circle-down"></i></button>
 
         </div>
 
@@ -179,5 +207,6 @@
         </div>
 
     </div>
+    
     <app-canvas [inputData]="canvasInputData"></app-canvas>
 </main>

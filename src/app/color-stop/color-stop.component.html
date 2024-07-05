@@ -3,13 +3,17 @@
     <div *ngFor="let colorID of colorEls; let i=index" class="color-stop-container">
         <input 
         #colorInput
-        [id]="colorID" [style.background]="colorEls[i]" [cpWidth]="'280px'" [cpAlphaChannel]="'always'"
+        [id]="colorID"
+        [style.background]="colorEls[i]" [cpWidth]="'280px'" [cpAlphaChannel]="'always'"
         [cpOutputFormat]="'rgba'"
         [cpPresetColors]="['#ffffff', '#ff5c33', '#ff66b3', '#ccccff', '#b3ffff', '#80ff80', '#ffff33']"
         [cpMaxPresetColorsLength]="16"
         [cpAddColorButton]="true" 
-        [(colorPicker)]="colorEls[i]" 
-        (colorPickerChange)="onColorChange.emit(this.colorEls)"
+        [cpOKButton]="true"
+        [cpOKButtonText]="'done'"
+        [cpOKButtonClass]="'done-button'"
+        [colorPicker]="colorEls[i]" 
+        (colorPickerSelect)="updateColorStop(i, $event)"
         />
 
         <i class="fa-solid fa-circle-minus remove-color" (click)="removeColorStop(colorInput, i)"></i>

@@ -1,4 +1,10 @@
-#canvas {
+.canvas {
     position: absolute;
     z-index: -1;
+}
+
+.card {
+    position: relative;
+    z-index: -10;
+    background: black;
 }

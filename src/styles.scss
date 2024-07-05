@@ -55,6 +55,12 @@ $form-check-input-focus-box-shadow:       none;
 .form-switch .form-check-input {
     --bs-form-switch-bg: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='rgba(255, 255, 255, .8)'/%3e%3c/svg%3e");
 }
+
+.cp-add-color-button-class {
+    width: 56px !important;
+    left: 4px !important;
+}
+
 @font-face {
     font-family: 'kode';
     src: url(./app/assets/kode-mono.ttf);
@@ -97,3 +103,15 @@ canvas {
     outline: none !important;
     box-shadow: none !important;
   }
+
+  .done-button {
+    border: transparent;
+    background-color: rgb(77, 77, 207);
+    color: white;
+    border-radius: 5px;
+    padding: 2px 5px;
+}
+
+.done-button:hover {
+    scale: 1.05;
+}

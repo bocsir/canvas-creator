@@ -15,12 +15,24 @@ export class CanvasComponent implements OnInit {
   ctx!: CanvasRenderingContext2D;
   flowField!: FlowFieldEffect;
 
-
   defaultInputData!: CanvasInput;
   @Input() inputData!: CanvasInput;
+  @Input() isCard!: boolean;
 
+
+  cardWidth!: number | null;
+  cardHeight!: number | null;
   //initialize with defaults
   ngOnInit(): void { 
+    if (this.isCard) {
+      this.cardWidth = 480;
+      this.cardHeight = 300;
+    } else {
+      this.cardWidth = null;
+      this.cardHeight = null;
+    }
+
+
     //dont run the rest if
     //eg. only use defaults for home pages canvas
     if (this.inputData){ return; }
@@ -37,30 +49,38 @@ export class CanvasComponent implements OnInit {
       mouseRadius: 100,
       colorList: [], 
       animate: true,
+      speed: 10,
       angleFunc: 'cos(x * .01) + sin(y * .01)',
       lineToXFunc: 'x + cos(angle) * length',
       lineToYFunc: 'y + sin(angle) * length'  
     };
   
-    this.flowField = new FlowFieldEffect(this.defaultInputData, this.ctx, this.canvas.nativeElement.width, this.canvas.nativeElement.height)
+    this.flowField = new FlowFieldEffect(this.defaultInputData, this.ctx, this.cardWidth! | this.canvas.nativeElement.width, this.cardHeight! | this.canvas.nativeElement.height)
     this.flowField.animate();
   }
 
   //listen for changes on component @Input
   ngOnChanges(): void {
-    console.log(this.inputData);
+    if (this.isCard) {
+      this.canvas.nativeElement.height = 300;
+      this.canvas.nativeElement.width = 480;
+    } else {
     this.canvas.nativeElement.width = window.innerWidth;
     this.canvas.nativeElement.height = window.innerHeight;
+    }
     this.ctx = this.canvas.nativeElement.getContext('2d')!;
     if(this.flowField) {
       this.flowField.stopAnimation();
     }
-    this.flowField = new FlowFieldEffect(this.inputData, this.ctx, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
+    this.flowField = new FlowFieldEffect(this.inputData, this.ctx, this.cardWidth! | this.canvas.nativeElement.width, this.cardHeight! | this.canvas.nativeElement.height);
     this.flowField.animate();
   }
 
   @HostListener('window:resize', ['$event'])
   onResize() {
+    if (this.isCard) {
+      return;
+    }
     this.canvas.nativeElement.width = window.innerWidth;
     this.canvas.nativeElement.height = window.innerHeight;  
     this.ctx = this.canvas.nativeElement.getContext('2d')!; 
@@ -92,7 +112,6 @@ class FlowFieldEffect {
   #domain: number;
   #vr: number;
   #recievedData: CanvasInput;
-
 
   constructor(recievedData: CanvasInput, ctx: CanvasRenderingContext2D, width: number, height: number) { 
     this.#recievedData = recievedData;
@@ -200,7 +219,6 @@ class FlowFieldEffect {
     this.#ctx.moveTo(x, y);
 
     //evaluate string inputs for lineTo
-    //find different method than eval
     const lineToX = eval(this.#recievedData.lineToXFunc);
     const lineToY = eval(this.#recievedData.lineToYFunc);
 
@@ -219,7 +237,7 @@ class FlowFieldEffect {
     const deltaTime = timeStamp - this.#lastTime;
     this.#lastTime = timeStamp;
 
-    if (this.#timer > this.#interval) {
+    if (this.#timer > this.#interval - (this.#recievedData.speed-50)) {
       this.#ctx.clearRect(0, 0, this.#width, this.#height)
       this.#domain += this.#vr;
       (this.#domain > 8 || this.#domain < -8 ) ? this.#vr *= -1 : '';  
@@ -228,11 +246,10 @@ class FlowFieldEffect {
       if(!this.#recievedData.animate) {
         this.#domain = 2;
       }
-      //draw frame
+      //draw 
       for (let y = 0; y < this.#height; y+= this.#cellSize) {
         for (let x = 0; x < this.#width; x+= this.#cellSize) {
-          //make input for this whole arument except [* this.domain]
-          const angle = (eval(this.#recievedData.angleFunc)) * this.#domain;
+          const angle = eval(this.#recievedData.angleFunc) * this.#domain;
           this.#draw(angle, x, y);
         }
       }
@@ -245,6 +262,7 @@ class FlowFieldEffect {
   }
 
 }
+
 
 const mouse = {
   x: 0,

@@ -15,9 +15,9 @@ import { CanvasInput } from '../canvas-input';
     imports: [CanvasComponent, CommonModule, SliderModule, InputTextModule, FormsModule, ColorStopComponent]
 })
 export class DesignComponent {
-  hideExplanation: boolean = false;
+  hideExplanation: boolean = true;
   menuVisible: boolean = true;  
-
+  animating: boolean = false;
   mEffect: boolean = false;
 
   //min/max range values for sliders
@@ -32,6 +32,9 @@ export class DesignComponent {
 
   gridSpaceMin: number = 4;
   gridSpaceMax: number = 300;
+
+  speedMin: number = 0;
+  speedMax: number = 150;
   
   angleFunc: string = 'cos(x * .01) + sin(y * .01)';
   lineToX: string = 'x + cos(angle) * length';
@@ -44,8 +47,9 @@ export class DesignComponent {
     lineLength: 2,
     mouseEffect: 'none',
     mouseRadius: 100, 
-    colorList: ['rgb(255,255,255)'], 
+    colorList: ['rgb(80,80,80)'], 
     animate: false, 
+    speed: 10,
     angleFunc: this.angleFunc,
     lineToXFunc: this.lineToX,
     lineToYFunc: this.lineToY
@@ -83,6 +87,8 @@ export class DesignComponent {
         return true;
       case 'lineToYFunc':
         return true;  
+      case 'speed':
+        return (value >=this.speedMin && value <= this.speedMax);    
     }
 
     return false;
@@ -93,7 +99,11 @@ export class DesignComponent {
   }
 
   toggleCanvasAnimation() {
+    this.animating = !this.animating;
     this.canvasInputData = { ...this.canvasInputData, animate: !this.canvasInputData.animate }
   }
   
 }
+
+//walking spider: 
+/*{ gridSpacing: 47, lineWidth: 1, lineLength: 1, mouseEffect: "dim", mouseRadius: 163, colorList: (4) […], animate: true, angleFunc: "Math.cos(x * .01) + Math.sin(y * .01)", lineToXFunc: "x + Math.cos(angle) * length * 1000", lineToYFunc: "1*y*length" } */
