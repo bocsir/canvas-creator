@@ -20,6 +20,7 @@
     "@angular/router": "^18.0.0",
     "bootstrap": "^5.3.3",
     "ngx-color-picker": "^16.0.0",
+    "pixi.js": "^8.2.3",
     "primeng": "^17.18.1",
     "rxjs": "~7.8.0",
     "sass": "^1.77.6",

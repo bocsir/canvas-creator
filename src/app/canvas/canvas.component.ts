@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, ViewChild, ElementRef, HostListener, Input, OnInit, OnChanges, SimpleChanges} from '@angular/core';
 import { CanvasInput } from '../canvas-input';
-
+import * as PIXI from 'pixi.js';
 @Component({
   selector: 'app-canvas',
   standalone: true,
@@ -10,41 +10,51 @@ import { CanvasInput } from '../canvas-input';
   styleUrl: './canvas.component.css'
 })
 export class CanvasComponent implements OnInit {
+ 
+
   //get canvas element
   @ViewChild('myCanvas', { static: true }) canvas!: ElementRef<HTMLCanvasElement>;
-  ctx!: CanvasRenderingContext2D;
+ 
+  app: PIXI.Application = new PIXI.Application();
+ 
+  // ctx!: CanvasRenderingContext2D;
   flowField!: FlowFieldEffect;
 
   defaultInputData!: CanvasInput;
-  @Input() inputData!: CanvasInput;
-  @Input() isCard!: boolean;
+  // @Input() inputData!: CanvasInput;
+  // @Input() isCard!: boolean;
 
 
-  cardWidth!: number | null;
-  cardHeight!: number | null;
+  // cardWidth!: number | null;
+  // cardHeight!: number | null;
   //initialize with defaults
-  ngOnInit(): void { 
-    if (this.isCard) {
-      this.cardWidth = 480;
-      this.cardHeight = 300;
-    } else {
-      this.cardWidth = null;
-      this.cardHeight = null;
-    }
+  async ngOnInit() { 
+    // if (this.isCard) {
+    //   this.cardWidth = 480;
+    //   this.cardHeight = 300;
+    // } else {
+    //   this.cardWidth = null;
+    //   this.cardHeight = null;
+    // }
+    // //dont run the rest if
+    // //eg. only use defaults for home pages canvas
+    // if (this.inputData){ return; }
+    
+    // this.ctx = this.canvas.nativeElement.getContext('2d')!;
+    // this.canvas.nativeElement.width = window.innerWidth;
+    // this.canvas.nativeElement.height = window.innerHeight;
 
+    //pixi
 
-    //dont run the rest if
-    //eg. only use defaults for home pages canvas
-    if (this.inputData){ return; }
-    this.ctx = this.canvas.nativeElement.getContext('2d')!;
-    this.canvas.nativeElement.width = window.innerWidth;
-    this.canvas.nativeElement.height = window.innerHeight;
+    await this.app.init({resizeTo: window});
+    document.body.appendChild(this.app.canvas);
+
 
     //home page canvas object
     this.defaultInputData = {
       gridSpacing : 10,
       lineWidth: 2,
-      lineLength: 20,
+      lineLength: 2,
       mouseEffect: 'lit',
       mouseRadius: 150,
       colorList: [], 
@@ -55,41 +65,43 @@ export class CanvasComponent implements OnInit {
       lineToYFunc: "y + Math.sin(angle) * length",
       };
   
-    this.flowField = new FlowFieldEffect(this.defaultInputData, this.ctx, this.cardWidth! | this.canvas.nativeElement.width, this.cardHeight! | this.canvas.nativeElement.height)
+    // this.flowField = new FlowFieldEffect(this.app, this.defaultInputData, this.ctx, this.cardWidth! | this.canvas.nativeElement.width, this.cardHeight! | this.canvas.nativeElement.height)
+    this.flowField = new FlowFieldEffect(this.app, this.defaultInputData, window.innerWidth, window.innerHeight);
+
     this.flowField.animate();
   }
 
   //listen for changes on component @Input
-  ngOnChanges(): void {
-    if (this.isCard) {
-      this.canvas.nativeElement.height = 300;
-      this.canvas.nativeElement.width = 480;
-    } else {
-    this.canvas.nativeElement.width = window.innerWidth;
-    this.canvas.nativeElement.height = window.innerHeight;
-    }
-    this.ctx = this.canvas.nativeElement.getContext('2d')!;
-    if(this.flowField) {
-      this.flowField.stopAnimation();
-    }
-    this.flowField = new FlowFieldEffect(this.inputData, this.ctx, this.cardWidth! | this.canvas.nativeElement.width, this.cardHeight! | this.canvas.nativeElement.height);
-    this.flowField.animate();
-  }
+  // ngOnChanges(): void {
+  //   if (this.isCard) {
+  //     this.canvas.nativeElement.height = 300;
+  //     this.canvas.nativeElement.width = 480;
+  //   } else {
+  //   this.canvas.nativeElement.width = window.innerWidth;
+  //   this.canvas.nativeElement.height = window.innerHeight;
+  //   }
+  //   this.ctx = this.canvas.nativeElement.getContext('2d')!;
+  //   if(this.flowField) {
+  //     this.flowField.stopAnimation();
+  //   }
+  //   this.flowField = new FlowFieldEffect(this.app, this.inputData, this.ctx, this.cardWidth! | this.canvas.nativeElement.width, this.cardHeight! | this.canvas.nativeElement.height);
+  //   this.flowField.animate();
+  // }
 
-  @HostListener('window:resize', ['$event'])
-  onResize() {
-    if (this.isCard) {
-      return;
-    }
-    this.canvas.nativeElement.width = window.innerWidth;
-    this.canvas.nativeElement.height = window.innerHeight;  
-    this.ctx = this.canvas.nativeElement.getContext('2d')!; 
-    this.flowField.stopAnimation();
+  // @HostListener('window:resize', ['$event'])
+  // onResize() {
+  //   if (this.isCard) {
+  //     return;
+  //   }
+  //   this.canvas.nativeElement.width = window.innerWidth;
+  //   this.canvas.nativeElement.height = window.innerHeight;  
+  //   this.ctx = this.canvas.nativeElement.getContext('2d')!; 
+  //   this.flowField.stopAnimation();
 
-    const data = (this.inputData) ? this.inputData : this.defaultInputData;
-    this.flowField = new FlowFieldEffect(data, this.ctx, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
-    this.flowField.animate();
-  }
+  //   const data = (this.inputData) ? this.inputData : this.defaultInputData;
+  //   this.flowField = new FlowFieldEffect(this.app, data, this.ctx, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
+  //   this.flowField.animate();
+  // }
 
   //get mouse coordinates each mousemove
   @HostListener('document:mousemove', ['$event'])
@@ -100,7 +112,8 @@ export class CanvasComponent implements OnInit {
 }
 
 class FlowFieldEffect {
-  #ctx: CanvasRenderingContext2D;
+  // #ctx: CanvasRenderingContext2D;
+
   #width: number;
   #height: number;
   #flowFieldAnimation: any;
@@ -113,23 +126,35 @@ class FlowFieldEffect {
   #vr: number;
   #recievedData: CanvasInput;
 
-  constructor(recievedData: CanvasInput, ctx: CanvasRenderingContext2D, width: number, height: number) { 
+  #app: PIXI.Application;
+  
+  #line: PIXI.Graphics = new PIXI.Graphics();
+  #line2: PIXI.Graphics = new PIXI.Graphics();
+
+  #isLine2: boolean = false;
+
+  #lineArr: PIXI.Graphics[] = [];
+
+  constructor(app: PIXI.Application, recievedData: CanvasInput, width: number, height: number) { 
+    this.#app = app;  
+    
     this.#recievedData = recievedData;
     
-    this.#ctx = ctx;
-    this.#ctx.strokeStyle = 'white';
-    this.#ctx.lineWidth = recievedData.lineWidth;
+    // this.#ctx = ctx;
+    // this.#ctx.strokeStyle = 'white';
+    // this.#ctx.lineWidth = recievedData.lineWidth;
 
     this.#width = width;
-    this.#height= height;
+    this.#height = height;
 
     this.#lastTime = 0;
     this.#interval = 1000/60;
     this.#timer = 0;
     this.#cellSize = recievedData.gridSpacing;
-    this.#createGradient();
+    // this.#createGradient();
 
-    this.#ctx.strokeStyle = this.#gradient;
+    // this.#ctx.strokeStyle = this.#gradient;
+
     this.#domain = 8;
     this.#vr = .03;
 
@@ -166,64 +191,44 @@ class FlowFieldEffect {
     }
   }
 
-  //color(s) for each line
-  #createGradient() {
-    this.#gradient = this.#ctx.createLinearGradient(0, 0, this.#width, this.#height);
-    const colorList = this.#recievedData.colorList;
+  //createGradient() - color(s) for each line
+  // #createGradient() {
+  //   this.#gradient = this.#ctx.createLinearGradient(0, 0, this.#width, this.#height);
+  //   const colorList = this.#recievedData.colorList;
 
-    if(colorList.length > 0) {
-      let colorStopPosition = (colorList.length === 1) ? 1 : ((.9) / (colorList.length -1));
-      let step = colorStopPosition;
+  //   if(colorList.length > 0) {
+  //     let colorStopPosition = (colorList.length === 1) ? 1 : ((.9) / (colorList.length -1));
+  //     let step = colorStopPosition;
 
-      for (let i = 0; i < colorList.length; i++) {
-        colorStopPosition = .1 + i * step;
-        this.#gradient.addColorStop(colorStopPosition, colorList[i]);        
-      }
-    } else {
-      //default gradient
-      this.#gradient.addColorStop('0.1', '#ff5c33');
-      this.#gradient.addColorStop('.2', '#ff66b3');
-      this.#gradient.addColorStop('.4', '#ccccff');
-      this.#gradient.addColorStop('.6', '#b3ffff');
-      this.#gradient.addColorStop('.8', '#80ff80');
-      this.#gradient.addColorStop('1', '#ffff33');
-    }
-  }
+  //     for (let i = 0; i < colorList.length; i++) {
+  //       colorStopPosition = .1 + i * step;
+  //       this.#gradient.addColorStop(colorStopPosition, colorList[i]);        
+  //     }
+  //   } else {
+  //     //default gradient
+  //     this.#gradient.addColorStop('0.1', '#ff5c33');
+  //     this.#gradient.addColorStop('.2', '#ff66b3');
+  //     this.#gradient.addColorStop('.4', '#ccccff');
+  //     this.#gradient.addColorStop('.6', '#b3ffff');
+  //     this.#gradient.addColorStop('.8', '#80ff80');
+  //     this.#gradient.addColorStop('1', '#ffff33');
+  //   }
+  // }
   
-  #draw(angle: number, x: number, y: number) {
-    let dx = mouse.x - x;
-    let dy = mouse.y - y;
-    let distance = Math.sqrt(dx * dx + dy * dy);
-    
-    let maxDist: number | null;
-    let length!: number;
-    const radius = this.#recievedData.mouseRadius;
-
-    //mouse effect
-    switch(this.#recievedData.mouseEffect) {
-      case('none'):
-        length = this.#recievedData.lineLength;
-        break;
-      case('lit'):
-        maxDist = (distance > radius) ? 40 : null;
-        length = (maxDist ?? distance) * (this.#recievedData.lineLength / 100);
-        break;
-      case('dim'):
-        length = (distance > radius) 
-        ? this.#recievedData.lineLength 
-        : ((distance / radius) * .5 *  this.#recievedData.lineLength);
-        break;
-    }
-
-    this.#ctx.beginPath();
-    this.#ctx.moveTo(x, y);
-
-    //evaluate string inputs for lineTo
+  #draw (angle: number, x: number, y: number): PIXI.Graphics {
+    length = 40;
+        // const angle = (x*.01) + Math.sin(y*.01)* 180/Math.PI;
     const lineToX = eval(this.#recievedData.lineToXFunc);
     const lineToY = eval(this.#recievedData.lineToYFunc);
 
-    this.#ctx.lineTo(lineToX, lineToY);
-    this.#ctx.stroke();
+    this.#line2.moveTo(x,y)
+    this.#line2.lineTo(lineToX, lineToY);
+    this.#line2.stroke({ width: 1, color: 0xffd900 });
+
+    // this.#ctx.lineTo(lineToX, lineToY);
+    // this.#ctx.stroke();
+
+    return this.#line2;
   }
   
   stopAnimation() {
@@ -231,6 +236,7 @@ class FlowFieldEffect {
   }
 
   animate(timeStamp?: number) {
+
     timeStamp = (timeStamp) ? timeStamp : 0;
   
     //get change in time between frames for smooth animation on all machines
@@ -238,21 +244,27 @@ class FlowFieldEffect {
     this.#lastTime = timeStamp;
 
     if (this.#timer > this.#interval - (this.#recievedData.speed-50)) {
-      this.#ctx.clearRect(0, 0, this.#width, this.#height)
+      // this.#ctx.clearRect(0, 0, this.#width, this.#height)
       this.#domain += this.#vr;
-      (this.#domain > 8 || this.#domain < -8 ) ? this.#vr *= -1 : '';  
+      if (this.#domain > 8 || this.#domain < -8 ) this.#vr *= -1;  
 
-      //shoul have a slider for this and call it effectMultiplier or the like
-      if(!this.#recievedData.animate) {
-        this.#domain = 2;
-      }
-      //draw 
-      for (let y = 0; y < this.#height; y+= this.#cellSize) {
-        for (let x = 0; x < this.#width; x+= this.#cellSize) {
+      //animate set to false. need slider instead of 2
+      if (!this.#recievedData.animate) this.#domain = 2; 
+
+      let drawResult;
+      //draw frame
+      this.#line2.context.clear();
+
+      for (let y = 0; y < this.#height; y += this.#cellSize) {
+        for (let x = 0; x < this.#width; x += this.#cellSize) {
           const angle = eval(this.#recievedData.angleFunc) * this.#domain;
-          this.#draw(angle, x, y);
+          drawResult = this.#draw(angle, x, y);
         }
       }
+      console.log('done');
+      this.#app.stage.removeChildren();
+      this.#line = drawResult!;
+      this.#app.stage.addChild(this.#line);
 
       this.#timer = 0;
     } else {
@@ -263,8 +275,39 @@ class FlowFieldEffect {
 
 }
 
-
 const mouse = {
   x: 0,
   y: 0,
 }
+
+//in draw()
+    //get distance from mouse for each point
+    // let dx = mouse.x - x;
+    // let dy = mouse.y - y;
+    // let distance = Math.sqrt(dx * dx + dy * dy);
+    
+    // let maxDist: number | null;
+    // const radius = this.#recievedData.mouseRadius;
+
+    // //mouse effect
+    // switch(this.#recievedData.mouseEffect) {
+    //   case('none'):
+    //     length = this.#recievedData.lineLength;
+    //     break;
+    //   case('lit'):
+    //     maxDist = (distance > radius) ? 40 : null;
+    //     length = (maxDist ?? distance) * (this.#recievedData.lineLength / 100);
+    //     break;
+    //   case('dim'):
+    //     length = (distance > radius) 
+    //     ? this.#recievedData.lineLength 
+    //     : ((distance / radius) * .5 *  this.#recievedData.lineLength);
+    //     break;
+    // }
+
+    // this.#ctx.beginPath();
+    // this.#ctx.moveTo(x, y);
+
+    //evaluate string inputs for lineTo
+    // const lineToX = eval(this.#recievedData.lineToXFunc);
+    // const lineToY = eval(this.#recievedData.lineToYFunc);
