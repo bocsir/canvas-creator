@@ -1,4 +1,9 @@
 # CanvasCreator
+WIP project to allow users to create a dynamic, interactable animation using html canvas. Their design will be exportable via svg or a copyable block of html and typescript code.
+
+![image](https://github.com/bocsir/canvas-creator/assets/77936915/404d8186-6bb8-4e77-a1a7-2278ce6b0ec3)
+
+<hr>
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 18.0.3.
 
