@@ -42,18 +42,18 @@ export class CanvasComponent implements OnInit {
 
     //home page canvas object
     this.defaultInputData = {
-      gridSpacing : 20,
+      gridSpacing : 10,
       lineWidth: 2,
       lineLength: 20,
-      mouseEffect: 'dim',
-      mouseRadius: 100,
+      mouseEffect: 'lit',
+      mouseRadius: 150,
       colorList: [], 
       animate: true,
-      speed: 10,
-      angleFunc: 'cos(x * .01) + sin(y * .01)',
-      lineToXFunc: 'x + cos(angle) * length',
-      lineToYFunc: 'y + sin(angle) * length'  
-    };
+      speed: 0,
+      angleFunc: '(x * .01) + sin(y * .01)',
+      lineToXFunc: "x + Math.cos(angle) * length",
+      lineToYFunc: "y + Math.sin(angle) * length",
+      };
   
     this.flowField = new FlowFieldEffect(this.defaultInputData, this.ctx, this.cardWidth! | this.canvas.nativeElement.width, this.cardHeight! | this.canvas.nativeElement.height)
     this.flowField.animate();

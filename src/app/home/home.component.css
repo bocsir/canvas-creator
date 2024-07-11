@@ -1,3 +1,8 @@
+@font-face {
+    font-family: 'rubik-mono';
+    src: url(/src/app/assets/RubikMonoOne-Regular.ttf);
+}
+
 nav {
     position: absolute;
     width: 100vw;
@@ -12,6 +17,11 @@ nav .logo {
     color: white;
 }
 
+.logo h2 {
+    font-size: 2.5rem;
+    font-weight: 1000;
+}
+
 nav svg {
     margin: 10px;
 }
@@ -22,47 +32,33 @@ nav svg {
     display: flex;
     justify-content: center;
     background: rgba(0, 0, 0, 0.733);
+    transition: background .5s;
 }
 
 .show-canvas {
-    background: rgba(0, 0, 0, 0.3);
+    background: rgba(0, 0, 0, 0.4);
 }
 
 h1 {
-    font-size: 4rem;
+    font-size: 3.8rem;
     text-align: left;
     max-width: 885px;
-    cursor: default; 
-}
-
-h1 span {
-    font-size: 1rem;
-    position: relative;
-    bottom: 1.2rem;
-    left: 10px;
+    cursor: default;
+    padding: 15px;
+    border: 2px solid transparent;
+    transition: background .5s ease-in-out, border-radius 1s;
+    font-weight: 100;
 }
 
 #cta {
     position: relative;
     top: 30vh;
     height: min-content;
-    padding: 10px;
 }
 
 .show-background {
-    background:rgba(0, 0, 0, 0.8);
-    border-radius: 20px;
-}
-
-.btn-container {
-    padding: 0 10px;
-    width: max-content;
-    height: 3rem;
-    background: rgb(64, 64, 165);
-    border-radius: 10px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    background-color:rgba(0, 0, 0, 0.7);
+    border-radius: 40px;
 }
 
 .fa-arrow-right {
@@ -71,7 +67,10 @@ h1 span {
     left: .5rem;
     padding-right: 10px;
 }
-button {
+
+#cta button {
+    margin-top: 10px;
+    margin-left: 20px;
     /* Variables */
     --button_radius: 0.75em;
     --button_color: black;
