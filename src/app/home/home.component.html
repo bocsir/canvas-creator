@@ -1,38 +1,38 @@
 <nav>
     <a class="logo" href="/">
         <svg width="56" height="52" viewBox="0 0 56 52" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path fill-rule="evenodd" clip-rule="evenodd" d="M42.3333 46L24 26L5.66666 46H2L24 22L46 46H42.3333Z" fill="rgb(255,255,255)"/>
-            <path fill-rule="evenodd" clip-rule="evenodd" d="M12 13L23.9737 26L35.9474 13H32.2632L23.9737 22L15.6842 13H12Z" fill="rgb(255,255,255)"/>
-            <path fill-rule="evenodd" clip-rule="evenodd" d="M35.9474 13L23.9737 -2.8193e-05L12 13H15.6842L23.9737 3.99997L32.2632 13H35.9474Z" fill="rgb(255,255,255)"/>
-            <path fill-rule="evenodd" clip-rule="evenodd" d="M24 40.9974L4.66023 20L7.62939e-06 25.0736L24 51.1308L24 40.9974Z" fill="rgb(255,255,255)"/>
-            <path fill-rule="evenodd" clip-rule="evenodd" d="M24 40.9974L43.3398 20L48 25.0736L24 51.1308L24 40.9974Z" fill="rgb(255,255,255)"/>
-            <path fill-rule="evenodd" clip-rule="evenodd" d="M41.3216 43.3011L4.98895 43.3038L3.00001 46.0068L43.3103 46.0038L41.3216 43.3011ZM55.7987 43.3906L56 43.3L55.7987 43.3V43.3906Z" fill="rgb(255,255,255)"/>
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M42.3333 46L24 26L5.66666 46H2L24 22L46 46H42.3333Z" fill="#D9D9D9"/>
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M12 13L23.9737 26L35.9474 13H32.2632L23.9737 22L15.6842 13H12Z" fill="#D9D9D9"/>
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M35.9474 13L23.9737 -2.8193e-05L12 13H15.6842L23.9737 3.99997L32.2632 13H35.9474Z" fill="#D9D9D9"/>
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M24 40.9974L4.66023 20L7.62939e-06 25.0736L24 51.1308L24 40.9974Z" fill="#D9D9D9"/>
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M24 40.9974L43.3398 20L48 25.0736L24 51.1308L24 40.9974Z" fill="#D9D9D9"/>
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M41.3216 43.3011L4.98895 43.3038L3.00001 46.0068L43.3103 46.0038L41.3216 43.3011ZM55.7987 43.3906L56 43.3L55.7987 43.3V43.3906Z" fill="#D9D9D9"/>
             </svg>
             
-        <h2>matrix-studio</h2>
+        <h2></h2>
     </a>
 </nav>
 
 <div>
     <section class="cta-container" [ngClass]="{'show-canvas' : brightenCanvas}">
-        <app-canvas></app-canvas>
-        <div id="cta" >
-            <h1 [ngClass]="{'show-background' : brightenCanvas}">Create a customizable graphic with the HTML5 Canvas API</h1> 
+        <app-canvas [inputData]="tameWaves"></app-canvas>
+        <div id="cta" class="cta" [ngClass]="{'show-background' : brightenCanvas}">
+            <h1>Create a customizable graphic with the HTML5 Canvas API<span (mouseenter)="brightenCanvas = true" (mouseleave)="brightenCanvas = false">(like this one!)<i class="fa-solid fa-arrow-pointer"></i></span></h1> 
                 <button routerLink="/design" routerLinkActive="active" ariaCurrentWhenActive="page">
-                    <span class="button-top"(mouseenter)="brightenCanvas = true" (mouseleave)="brightenCanvas = false">start now<i class="fa-solid fa-arrow-right"></i></span>
+                    <span class="button-top">start now<i class="fa-solid fa-arrow-right"></i></span>
                 </button>
         </div>
         <svg (click)="scrollDown()" id="up-arrow" width="34" height="19" viewBox="0 0 34 19" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <rect width="4" height="22.937" rx="2" transform="matrix(0.739039 0.673663 -0.739039 0.673663 16.9513 0)" fill="rgb(255,255,255)"/>
-            <rect width="4" height="22.937" rx="2" transform="matrix(0.739039 -0.673663 0.739039 0.673663 14 2.69464)" fill="rgb(255,255,255)"/>
+            <rect width="4" height="22.937" rx="2" transform="matrix(0.739039 0.673663 -0.739039 0.673663 16.9513 0)" fill="#D9D9D9"/>
+            <rect width="4" height="22.937" rx="2" transform="matrix(0.739039 -0.673663 0.739039 0.673663 14 2.69464)" fill="#D9D9D9"/>
         </svg>
             
     </section>
     
     <section id="about-section">
         <h2>Make your own unique<br>grid-based display</h2>
-
-        <!-- <div class="canvas-card" id="card1">
+<!-- 
+        <div class="canvas-card" id="card1">
             <app-canvas [isCard]="true" [inputData]="tameWaves"></app-canvas>
         </div>
 

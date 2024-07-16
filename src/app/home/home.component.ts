@@ -19,17 +19,18 @@ scrollDown(): void {
 
   brightenCanvas = false;
 
-  tameWaves: CanvasInput = { angleFunc: "(x * .001) + Math.sin(y * .01)",
+  tameWaves: CanvasInput = { 
+    angleFunc: "(x * .003) + sin(y * .01)",
     animate: true,
-    colorList: [ "rgba(217,35,220,1)", "rgba(255,255,51,1)", "rgba(39,19,173,1)" ], 
-    gridSpacing: 14,
-    lineLength: 19,
-    lineToXFunc: "x + Math.cos(angle) * length * 5",
-    lineToYFunc: "y + Math.sin(angle) * length",
+    colorList: [ 'yellow' ], 
+    gridSpacing: 20,
+    lineLength: 5,
+    lineToXFunc: "x + cos(angle) * length * 5",
+    lineToYFunc: "y + sin(angle) * length",
     lineWidth: 1,
     mouseEffect: "none",
     mouseRadius: 100,
-    speed: 25
+    speed: 0
   }
   
   allowHoverEvents() {

@@ -9,15 +9,11 @@ main {
     margin-bottom: 10px;
 }
 
-.logo-container h2{
-    font-size: 1rem;
-    margin-top: 15px;
-}
 
 .logo {
     position: relative;
     top: 0px;
-    left: 0px;
+    left: -8px;
     display: flex;
     width: fit-content;
     height: fit-content;
@@ -120,9 +116,6 @@ input[type=number] {
     font-weight: 650;
 }
 
-.input-container .form-range {
-    cursor: pointer;
-}
 
 .input-container {
     margin-bottom: 15px;
@@ -209,4 +202,43 @@ input[type=number] {
     position: absolute;
     right: 6px;
     top: 6px;
+}
+
+.form-range:hover {
+    cursor: pointer;
+}
+
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+    
+    input[type='range']::-webkit-slider-runnable-track {
+        height: 8px;
+        border-top-left-radius: 4px;
+        border-bottom-left-radius: 4px;    
+        -webkit-appearance: none;
+        color: #13bba4;
+        margin-top: -1px;
+    }
+    
+    input[type='range']::-webkit-slider-thumb {
+      width: 10px;
+      -webkit-appearance: none;
+      height: 10px;
+      cursor: ew-resize;
+      box-shadow: -80px 0 0 80px rgb(77, 77, 207);
+    }
+
+}
+/** FF*/
+input[type="range"]::-moz-range-progress {
+    height: 8px;
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+    background-color: rgb(77, 77, 207); 
+}
+/* IE*/
+input[type="range"]::-ms-fill-lower {
+    height: 8px;
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+    background-color: rgb(77, 77, 207); 
 }

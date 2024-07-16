@@ -35,6 +35,8 @@ $form-check-input-indeterminate-bg-image:       url("data:image/svg+xml,<svg xml
 $form-check-input-focus-border:           white;
 $form-check-input-focus-box-shadow:       none;
 
+$form-check-input-checked-bg-color:       rgb(77, 77, 207);
+
 @import "../node_modules/bootstrap/scss/bootstrap";
 
 .btn-outline-primary {
@@ -84,7 +86,6 @@ canvas {
     background: black;
     top: 0;
     left: 0;
-    z-index: -1;
 }
 
 .cp-add-color-button-class {
