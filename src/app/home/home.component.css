@@ -17,9 +17,13 @@ nav .logo {
     color: white;
 }
 
+nav .logo svg {
+    width: 60px;
+    height: 60px;
+}
+
 .logo h2 {
-    font-size: 2.5rem;
-    font-weight: 1000;
+    font-size: 1.5rem;
 }
 
 nav svg {
@@ -31,12 +35,12 @@ nav svg {
     height: 100vh;
     display: flex;
     justify-content: center;
-    background: rgba(0, 0, 0, 0.733);
+    background: rgba(0, 0, 0, .4);
     transition: background 1s;
 }
 
 .show-canvas {
-    background: rgba(0, 0, 0, 0.4);
+    background: rgba(0, 0, 0, 0);
 }
 
 h1 {

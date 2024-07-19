@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, ViewChild, ElementRef, HostListener, Input, OnInit, OnChanges, SimpleChanges} from '@angular/core';
 import { CanvasInput } from '../canvas-input';
-import * as math from 'mathjs';
 @Component({
   selector: 'app-canvas',
   standalone: true,
@@ -32,10 +31,7 @@ export class CanvasComponent implements OnInit {
       this.cardHeight = null;
     }
 
-
-    //dont run the rest if
-    //eg. only use defaults for home pages canvas
-    if (this.inputData){ return; }
+    if (this.inputData) return; 
     this.ctx = this.canvas.nativeElement.getContext('2d')!;
     this.canvas.nativeElement.width = window.innerWidth;
     this.canvas.nativeElement.height = window.innerHeight;
@@ -66,31 +62,27 @@ export class CanvasComponent implements OnInit {
       this.canvas.nativeElement.height = 300;
       this.canvas.nativeElement.width = 480;
     } else {
-    this.canvas.nativeElement.width = window.innerWidth;
-    this.canvas.nativeElement.height = window.innerHeight;
+      this.canvas.nativeElement.width = window.innerWidth;
+      this.canvas.nativeElement.height = window.innerHeight;
     }
     this.ctx = this.canvas.nativeElement.getContext('2d')!;
-    if(this.flowField) {
-      this.flowField.stopAnimation();
-    }
+    if (this.flowField) {this.flowField.stopAnimation(); console.log('stoppp');}
     this.flowField = new FlowFieldEffect(this.inputData, this.ctx, this.cardWidth! | this.canvas.nativeElement.width, this.cardHeight! | this.canvas.nativeElement.height);
     this.flowField.animate();
   }
 
-  // @HostListener('window:resize', ['$event'])
-  // onResize() {
-  //   if (this.isCard) {
-  //     return;
-  //   }
-  //   this.canvas.nativeElement.width = window.innerWidth;
-  //   this.canvas.nativeElement.height = window.innerHeight;  
-  //   this.ctx = this.canvas.nativeElement.getContext('2d')!; 
-  //   this.flowField.stopAnimation();
+  @HostListener('window:resize', ['$event'])
+  onResize() {
+    if (this.isCard || isRendered) return;
+    this.canvas.nativeElement.width = window.innerWidth;
+    this.canvas.nativeElement.height = window.innerHeight;  
+    this.ctx = this.canvas.nativeElement.getContext('2d')!; 
+    this.flowField.stopAnimation();
 
-  //   const data = (this.inputData) ? this.inputData : this.defaultInputData;
-  //   this.flowField = new FlowFieldEffect(data, this.ctx, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
-  //   this.flowField.animate();
-  // }
+    const data = (this.inputData) ? this.inputData : this.defaultInputData;
+    this.flowField = new FlowFieldEffect(data, this.ctx, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
+    this.flowField.animate();
+  }
 
   //get mouse coordinates each mousemove
   @HostListener('document:mousemove', ['$event'])
@@ -105,16 +97,13 @@ class FlowFieldEffect {
   #width: number;
   #height: number;
   #flowFieldAnimation: any;
-  #lastTime: number;
-  #interval: number;
-  #timer: number;
   #cellSize: number; 
   #gradient: any;
   #domain: number;
   #vr: number;
   #recievedData: CanvasInput;
   #frames: any[] = [];
-  #isDone: boolean = false;
+  #isRendering: boolean = true;
 
   constructor(recievedData: CanvasInput, ctx: CanvasRenderingContext2D, width: number, height: number) { 
     this.#recievedData = recievedData;
@@ -126,17 +115,13 @@ class FlowFieldEffect {
     this.#width = width;
     this.#height= height;
 
-    this.#lastTime = 0;
-    this.#interval = 1000/60;
-    this.#timer = 0;
     this.#cellSize = recievedData.gridSpacing;
     this.#createGradient();
 
     this.#ctx.strokeStyle = this.#gradient;
     this.#domain = 0;
-    this.#vr = .01;
+    this.#vr = .02;
     
-
     this.#formatTrig(this.#recievedData.angleFunc);
     this.#formatTrig(this.#recievedData.lineToXFunc);
     this.#formatTrig(this.#recievedData.lineToYFunc);
@@ -203,24 +188,26 @@ class FlowFieldEffect {
     const dy = mouse.y - y;
     const distance = Math.sqrt(dx * dx + dy * dy);
     
+    let length: number = this.#recievedData.lineLength;
     let maxDist: number | null;
     const radius = this.#recievedData.mouseRadius;
 
-    //mouse effect
-    switch(this.#recievedData.mouseEffect) {
-      case('none'):
-        length = this.#recievedData.lineLength;
-        break;
-      case('lit'):
-        maxDist = (distance > radius) ? 40 : null;
-        length = (maxDist ?? distance) * (this.#recievedData.lineLength / 100);
-        break;
-      case('dim'):
-        length = (distance > radius) 
-        ? this.#recievedData.lineLength 
-        : ((distance / radius) * .5 *  this.#recievedData.lineLength);
-        break;
+    //add and is rendering condition
+    if (this.#recievedData.mouseEffect !== 'none' && !this.#isRendering) {
+      //mouse effect
+      switch(this.#recievedData.mouseEffect) {
+        case('lit'):
+          maxDist = (distance > radius) ? 40 : null;
+          length = (maxDist ?? distance) * (this.#recievedData.lineLength / 100);
+          break;
+        case('dim'):
+          length = (distance > radius) 
+          ? this.#recievedData.lineLength 
+          : ((distance / radius) * .5 *  this.#recievedData.lineLength);
+          break;
+      }
     }
+
     this.#ctx.beginPath();
     this.#ctx.moveTo(x, y);
 
@@ -232,89 +219,143 @@ class FlowFieldEffect {
     this.#ctx.stroke();
   }
 
-/*
-  angleFunc: 'cos(x * .01) + sin(y * .01)',
-  lineToXFunc: 'x + cos(angle) * length',
-  lineToYFunc: 'y + sin(angle) * length'  
-*/
-
+  //call draw() using different multipliers to create an animation
   animate() {
-    //make slider for this
-    const maxDomain = 5;
+    //make slider for this and for a starting domain
+    let maxDomain = 5;
+    
+    isRendered = false;
 
+    //stop animation rendering when through domain multiplier
     if (this.#domain >= maxDomain) {
-      console.log('animation loaded');
+      //reset domain for mouse
+      this.#domain = this.#vr;
+      
+      isRendered = true;
+      //animate using prerendered object
       this.stopAnimation();
       this.useLoadedAnimation();
       return;
     }
-  
+
+    //reset canvas data
     this.#ctx.clearRect(0,0,this.#width, this.#height);
-
+    
+    //draw frame using new domain
     this.#domain += this.#vr;
-
-    //shoul have a slider for this and call it effectMultiplier or the like
-    // if(!this.#recievedData.animate) {
-    //   this.#domain = 2;
-    // }
-
-    //draw 
-    for (let y = 0; y < this.#height; y += this.#cellSize) {
-      for (let x = 0; x < this.#width; x += this.#cellSize) {
+    for (let x = 0; x < this.#width; x += this.#cellSize) {
+      for (let y = 0; y < this.#height; y += this.#cellSize) {
         const angle = eval(this.#recievedData.angleFunc) * this.#domain;
         this.#draw(angle, x, y);
       }
     }
-    console.log('done');
 
+    //only draw one frame if !animate
+    if(!this.#recievedData.animate) return;
+
+    //get image data of px values from current canvas and push to frames array 
     const imageData = this.#ctx.getImageData(0,0,this.#width, this.#height);
     this.#frames.push(imageData);
+
+    //call for new frame
     this.#flowFieldAnimation = requestAnimationFrame(this.animate.bind(this));
   }
 
   currentFrame: number = 0;
-
   async useLoadedAnimation() {
     let currentFrame = this.currentFrame;
-    const forward = currentFrame === 0;
 
+    //go forward through animation loop when 0
+    const forward = currentFrame === 0;
+    //draw the frame using current window width, height
     const drawFrame = (frameIndex: number) => {
+      //get current frame
       const frame = this.#frames[frameIndex];
 
       this.#ctx.canvas.width = window.innerWidth;
       this.#ctx.canvas.height = window.innerHeight;
 
+      //make new temporary canvas and give it values from #frames
       const offCanvas = document.createElement('canvas');
       offCanvas.width = frame.width;
       offCanvas.height = frame.height;
       const offCtx = offCanvas.getContext('2d');
-
       offCtx?.putImageData(frame, 0, 0);
 
+      //set canvas to use temporary canvas and scale it to the window size
       this.#ctx.drawImage(offCanvas, 0, 0, frame.width, frame.height, 0, 0, window.innerWidth, window.innerHeight);
     }
 
-    while ((forward && currentFrame < this.#frames.length - 1) || (!forward && currentFrame > 0)) {
-      await this.delay(50);
+    //while going forwad and less than animation array length or backward and over 0
+    while ((forward && currentFrame < this.#frames.length-1) || (!forward && currentFrame >= 0)) {
+      //adjust for framerate
+      await this.delay(20);
       drawFrame(currentFrame);
 
+      for (let y = 0; y < this.#height; y += this.#cellSize) {
+        for (let x = 0; x < this.#width; x += this.#cellSize) {
+          const angle = eval(this.#recievedData.angleFunc) * this.#domain;
+          this.drawMouseEffect(x, y, angle);
+        }
+      }
+
+      // alternative way to draw without adjusting for different aspect ratios
       // this.#ctx.putImageData(this.#frames[currentFrame], 0, 0);
-      
-      currentFrame = forward ? currentFrame + 1 : currentFrame - 1;
+
+      //next frame
+      this.currentFrame = forward ? currentFrame++ : currentFrame--;
+      this.#domain = forward ? this.#domain + this.#vr : this.#domain - this.#vr;
     }
-    
-    this.currentFrame = forward ? currentFrame : 0;
-    
-    console.log('animation done');
-    this.#flowFieldAnimation = requestAnimationFrame(this.animate.bind(this));
+        
+    this.#flowFieldAnimation = requestAnimationFrame(this.useLoadedAnimation.bind(this));
   }
 
   delay(ms: number) {
     return new Promise(res => setTimeout(res, ms));
   } 
+
+  drawMouseEffect(x: number, y: number, angle: number) {
+      const dx = mouse.x - x;
+      const dy = mouse.y - y;
+      const distance = Math.sqrt(dx * dx + dy * dy);
+      
+      let length: number;
+      let maxDist: number | null;
+      const radius = this.#recievedData.mouseRadius;
+
+      //mouse effect
+      if (this.#recievedData.mouseEffect !== 'none') {
+        //mouse effect
+        switch(this.#recievedData.mouseEffect) {
+          case('lit'):
+            maxDist = (distance > radius) ? 40 : null;
+            length = (maxDist ?? distance) * (this.#recievedData.lineLength / 100);
+            break;
+          case('dim'):
+            length = (distance > radius) 
+            ? this.#recievedData.lineLength 
+            : ((distance / radius) * .5 *  this.#recievedData.lineLength);
+            break;
+        }
+      }
+  
+
+      this.#ctx.strokeStyle = this.#gradient;
+        this.#ctx.beginPath();
+        this.#ctx.moveTo(x, y);
+  
+        //evaluate string inputs for lineTo
+        const lineToX = eval(this.#recievedData.lineToXFunc);
+        const lineToY = eval(this.#recievedData.lineToYFunc);
+    
+        this.#ctx.lineTo(lineToX, lineToY);
+        this.#ctx.stroke();  
+  }
 }
 
 const mouse = {
   x: 0,
   y: 0,
 }
+
+let isRendered = false;

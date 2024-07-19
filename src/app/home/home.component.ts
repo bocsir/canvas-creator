@@ -22,14 +22,14 @@ scrollDown(): void {
   tameWaves: CanvasInput = { 
     angleFunc: "(x * .003) + sin(y * .01)",
     animate: true,
-    colorList: [ 'yellow' ], 
-    gridSpacing: 20,
-    lineLength: 5,
+    colorList: [ 'white', 'purple', 'yellow' ], 
+    gridSpacing: 10,
+    lineLength: 3,
     lineToXFunc: "x + cos(angle) * length * 5",
     lineToYFunc: "y + sin(angle) * length",
     lineWidth: 1,
-    mouseEffect: "none",
-    mouseRadius: 100,
+    mouseEffect: "lit",
+    mouseRadius: 200,
     speed: 0
   }
   
