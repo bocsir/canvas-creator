@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, ViewChild, ElementRef, HostListener, Input, OnInit, OnChanges, SimpleChanges} from '@angular/core';
+import { Component, ViewChild, ElementRef, HostListener, Input, OnInit} from '@angular/core';
 import { CanvasInput } from '../canvas-input';
 @Component({
   selector: 'app-canvas',
@@ -18,9 +18,14 @@ export class CanvasComponent implements OnInit {
   @Input() inputData!: CanvasInput;
   @Input() isCard!: boolean;
 
-
   cardWidth!: number | null;
   cardHeight!: number | null;
+
+  loadedPercent: any;
+  updateLoadedPercent(percent: number) {
+    this.loadedPercent = percent;
+  }
+
   //initialize with defaults
   ngOnInit(): void { 
     if (this.isCard) {
@@ -48,11 +53,17 @@ export class CanvasComponent implements OnInit {
       speed: 10,
       angleFunc: 'cos(x * .01) + sin(y * .01)',
       lineToXFunc: 'x + cos(angle) * length',
-      lineToYFunc: 'y + sin(angle) * length'  
+      lineToYFunc: 'y + sin(angle) * length',
+      renderAnimation: false,
     };
   
-    this.flowField = new FlowFieldEffect(this.defaultInputData, this.ctx, this.cardWidth! | this.canvas.nativeElement.width, this.cardHeight! | this.canvas.nativeElement.height)
-    this.flowField.animate();
+    this.flowField = new FlowFieldEffect(
+      this.defaultInputData,
+      this.ctx,
+      this.cardWidth! | this.canvas.nativeElement.width,
+      this.cardHeight! | this.canvas.nativeElement.height,
+      (progress) => this.updateLoadedPercent(progress)
+    );
   }
 
   //listen for changes on component @Input
@@ -66,22 +77,45 @@ export class CanvasComponent implements OnInit {
       this.canvas.nativeElement.height = window.innerHeight;
     }
     this.ctx = this.canvas.nativeElement.getContext('2d')!;
-    if (this.flowField) {this.flowField.stopAnimation(); console.log('stoppp');}
-    this.flowField = new FlowFieldEffect(this.inputData, this.ctx, this.cardWidth! | this.canvas.nativeElement.width, this.cardHeight! | this.canvas.nativeElement.height);
-    this.flowField.animate();
+
+    //reset animations running in previouse instance
+    if (this.flowField) {
+      this.flowField.stopAnimation(); 
+      console.log('stoppp'); 
+      this.flowField.resetAnimation = true;
+    }
+
+    //make new instance
+    this.flowField = new FlowFieldEffect(
+      this.inputData,
+      this.ctx,
+      this.cardWidth! | this.canvas.nativeElement.width,
+      this.cardHeight! | this.canvas.nativeElement.height,
+      (progress) => this.updateLoadedPercent(progress)
+    );
+
+    //set renderAnimation back to false if true to prevent animation rendering every change
+    if (this.inputData.renderAnimation) {
+      this.inputData.renderAnimation = false;
+    }
   }
 
   @HostListener('window:resize', ['$event'])
   onResize() {
-    if (this.isCard || isRendered) return;
+    if (this.isCard) return;
     this.canvas.nativeElement.width = window.innerWidth;
     this.canvas.nativeElement.height = window.innerHeight;  
     this.ctx = this.canvas.nativeElement.getContext('2d')!; 
     this.flowField.stopAnimation();
 
     const data = (this.inputData) ? this.inputData : this.defaultInputData;
-    this.flowField = new FlowFieldEffect(data, this.ctx, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
-    this.flowField.animate();
+    this.flowField = new FlowFieldEffect(
+      data,
+      this.ctx,
+      this.canvas.nativeElement.width,
+      this.canvas.nativeElement.height,
+      (progress) => this.updateLoadedPercent(progress)
+    );
   }
 
   //get mouse coordinates each mousemove
@@ -103,9 +137,19 @@ class FlowFieldEffect {
   #vr: number;
   #recievedData: CanvasInput;
   #frames: any[] = [];
-  #isRendering: boolean = true;
+  //need to set this to true when user clicks save button
+  #renderAnimation: boolean = false;
+  #totalFrames: number;
+  #maxDomain: number;
+  #onLoadUpdate: (load: number) => void;
+  resetAnimation: boolean = false;
 
-  constructor(recievedData: CanvasInput, ctx: CanvasRenderingContext2D, width: number, height: number) { 
+  constructor(recievedData: CanvasInput, ctx: CanvasRenderingContext2D, width: number, height: number, onLoadUpdate: (load: number) => void) { 
+    this.stopAnimation();
+    this.resetAnimation = true;
+    this.#frames = [];
+
+    this.#onLoadUpdate = onLoadUpdate;
     this.#recievedData = recievedData;
     
     this.#ctx = ctx;
@@ -120,13 +164,18 @@ class FlowFieldEffect {
 
     this.#ctx.strokeStyle = this.#gradient;
     this.#domain = 0;
+    this.#maxDomain = 5
     this.#vr = .02;
-    
+
+    this.#renderAnimation = this.#recievedData.renderAnimation;
+    this.#totalFrames = Math.round(this.#maxDomain / this.#vr);
+  
     this.#formatTrig(this.#recievedData.angleFunc);
     this.#formatTrig(this.#recievedData.lineToXFunc);
     this.#formatTrig(this.#recievedData.lineToYFunc);
 
     console.log('recieved and formatted data: ', this.#recievedData);
+    this.animate();
   }
 
   //add 'math.' to all trig functions
@@ -193,7 +242,7 @@ class FlowFieldEffect {
     const radius = this.#recievedData.mouseRadius;
 
     //add and is rendering condition
-    if (this.#recievedData.mouseEffect !== 'none' && !this.#isRendering) {
+    if (this.#recievedData.mouseEffect !== 'none' && !this.#renderAnimation) {
       //mouse effect
       switch(this.#recievedData.mouseEffect) {
         case('lit'):
@@ -219,30 +268,25 @@ class FlowFieldEffect {
     this.#ctx.stroke();
   }
 
+  frame = 0;
   //call draw() using different multipliers to create an animation
   animate() {
     //make slider for this and for a starting domain
-    let maxDomain = 5;
-    
-    isRendered = false;
-
-    //stop animation rendering when through domain multiplier
-    if (this.#domain >= maxDomain) {
-      //reset domain for mouse
-      this.#domain = this.#vr;
-      
-      isRendered = true;
-      //animate using prerendered object
-      this.stopAnimation();
-      this.useLoadedAnimation();
-      return;
+    //change direction of domain
+    if (this.#domain >= this.#maxDomain || this.#domain < 0) {
+        this.#vr *= -1;
     }
 
     //reset canvas data
     this.#ctx.clearRect(0,0,this.#width, this.#height);
     
+
     //draw frame using new domain
-    this.#domain += this.#vr;
+    //condition allows mouse effect for animate = false
+    if(this.#recievedData.animate){
+      this.#domain += this.#vr;
+    }
+
     for (let x = 0; x < this.#width; x += this.#cellSize) {
       for (let y = 0; y < this.#height; y += this.#cellSize) {
         const angle = eval(this.#recievedData.angleFunc) * this.#domain;
@@ -251,43 +295,78 @@ class FlowFieldEffect {
     }
 
     //only draw one frame if !animate
-    if(!this.#recievedData.animate) return;
+    if(this.#renderAnimation) {
+      const loadedPercent = Math.floor(this.frame / this.#totalFrames * 100);
+      this.#onLoadUpdate(loadedPercent);
+      console.log(`frame ${this.frame} / ${this.#totalFrames } rendered`);
 
-    //get image data of px values from current canvas and push to frames array 
-    const imageData = this.#ctx.getImageData(0,0,this.#width, this.#height);
-    this.#frames.push(imageData);
+      //if rendering is done
+      if (loadedPercent === 100) {
+        console.log('animation rendered');
+        //reset domain for mouse
+        this.#domain = this.#vr;
+        
+        this.#renderAnimation = false;
 
+        //animate using prerendered object, not this function
+        this.stopAnimation();
+        this.resetAnimation = false;
+        this.useLoadedAnimation();
+        return;
+
+      }
+      //get image data of px values from current canvas and push to frames array 
+      const imageData = this.#ctx.getImageData(0,0,this.#width, this.#height);
+      this.#frames.push(imageData);
+      this.frame++;
+    }
+  
     //call for new frame
     this.#flowFieldAnimation = requestAnimationFrame(this.animate.bind(this));
   }
 
   currentFrame: number = 0;
   async useLoadedAnimation() {
+    if (this.resetAnimation){
+      console.log('return');
+      return;
+    };
+
+
+    console.log(this.currentFrame,` ` ,this.#frames);
     let currentFrame = this.currentFrame;
 
-    //go forward through animation loop when 0
-    const forward = currentFrame === 0;
-    //draw the frame using current window width, height
+    //specify animation direction based on currentFrame
+    const forward = (currentFrame === 0);
+
+    //draw the frame at specified index
     const drawFrame = (frameIndex: number) => {
       //get current frame
       const frame = this.#frames[frameIndex];
 
-      this.#ctx.canvas.width = window.innerWidth;
-      this.#ctx.canvas.height = window.innerHeight;
+      //clear canvas context
+      this.#ctx.clearRect(0, 0, this.#ctx.canvas.width, this.#ctx.canvas.height);
 
-      //make new temporary canvas and give it values from #frames
-      const offCanvas = document.createElement('canvas');
-      offCanvas.width = frame.width;
-      offCanvas.height = frame.height;
-      const offCtx = offCanvas.getContext('2d');
-      offCtx?.putImageData(frame, 0, 0);
+      //make new temporary canvas to allow for responsive aspect ratio
+      const tempCanvas = document.createElement('canvas');
+      tempCanvas.width = frame.width;
+      tempCanvas.height = frame.height;
 
-      //set canvas to use temporary canvas and scale it to the window size
-      this.#ctx.drawImage(offCanvas, 0, 0, frame.width, frame.height, 0, 0, window.innerWidth, window.innerHeight);
+      //get context and fill with imageData from pre-rendered frame
+      const tempCtx = tempCanvas.getContext('2d');
+      tempCtx?.putImageData(frame, 0, 0);
+
+      //render canvas to browser using temporary canvas
+      this.#ctx.drawImage(tempCanvas, 0, 0, frame.width, frame.height, 0, 0, window.innerWidth, window.innerHeight);
     }
 
-    //while going forwad and less than animation array length or backward and over 0
-    while ((forward && currentFrame < this.#frames.length-1) || (!forward && currentFrame >= 0)) {
+    //while going forward and less than animation array length or backward and over 0
+    while ((forward && currentFrame < this.#frames.length) || (!forward && currentFrame >= 0)) {
+      if (this.resetAnimation){
+        console.log('reset');
+        break;
+      };
+
       //adjust for framerate
       await this.delay(20);
       drawFrame(currentFrame);
@@ -306,8 +385,8 @@ class FlowFieldEffect {
       this.currentFrame = forward ? currentFrame++ : currentFrame--;
       this.#domain = forward ? this.#domain + this.#vr : this.#domain - this.#vr;
     }
-        
-    this.#flowFieldAnimation = requestAnimationFrame(this.useLoadedAnimation.bind(this));
+    
+    this.useLoadedAnimation();
   }
 
   delay(ms: number) {
@@ -338,7 +417,6 @@ class FlowFieldEffect {
             break;
         }
       }
-  
 
       this.#ctx.strokeStyle = this.#gradient;
         this.#ctx.beginPath();
@@ -358,4 +436,3 @@ const mouse = {
   y: 0,
 }
 
-let isRendered = false;

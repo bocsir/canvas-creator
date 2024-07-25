@@ -1,1 +1,7 @@
 <canvas #myCanvas class="canvas" [ngClass]="{'card' : isCard}"></canvas>
+<div id="percentLoaded" *ngIf="loadedPercent > 0 && loadedPercent < 100">
+    <div id="loadedColor" [style.width.%]="loadedPercent"> 
+        <span>loading animation... {{loadedPercent}}%</span>
+
+    </div>
+</div>

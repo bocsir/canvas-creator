@@ -8,3 +8,31 @@
     z-index: -10;
     background: black;
 }
+
+#percentLoaded {
+    margin-top: 10px;
+    margin-left: -5px;
+    position: relative;
+    font-size: 1rem;
+    background-color: #4d4dcf;
+    border-radius: 5px;
+    padding: 2px;
+    width: 250px;
+    height: 30px;
+}
+
+#loadedColor span {
+    position: absolute;
+    width: 250px;
+    padding: 0 5px;
+    margin-bottom: 3px;
+    margin-left: 3px;
+}
+
+#loadedColor {
+    position: relative;
+    z-index: 1;
+    height: 100%;
+    border-radius: 5px;
+    background-color: #3d3d9e;
+}

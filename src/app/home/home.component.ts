@@ -12,9 +12,11 @@ import { CanvasInput } from '../canvas-input';
   styleUrl: './home.component.css'
 })
 export class HomeComponent {
-scrollDown(): void {
-  window.scrollTo({top: window.innerHeight, behavior: 'smooth'});
-}
+  //down arrow functionality for homepage
+  scrollDown(): void {
+    window.scrollTo({top: window.innerHeight, behavior: 'smooth'});
+  }
+
   isHovering = false;
 
   brightenCanvas = false;
@@ -23,14 +25,15 @@ scrollDown(): void {
     angleFunc: "(x * .003) + sin(y * .01)",
     animate: true,
     colorList: [ 'white', 'purple', 'yellow' ], 
-    gridSpacing: 10,
-    lineLength: 3,
+    gridSpacing: 20,
+    lineLength: 5,
     lineToXFunc: "x + cos(angle) * length * 5",
     lineToYFunc: "y + sin(angle) * length",
     lineWidth: 1,
-    mouseEffect: "lit",
+    mouseEffect: "dim",
     mouseRadius: 200,
-    speed: 0
+    speed: 0,
+    renderAnimation: false,
   }
   
   allowHoverEvents() {

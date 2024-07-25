@@ -1,4 +1,4 @@
-import { Component, OnChanges, SimpleChange, SimpleChanges } from '@angular/core';
+import { Component } from '@angular/core';
 import { CanvasComponent } from "../canvas/canvas.component";
 import { CommonModule } from '@angular/common';
 import { InputTextModule } from 'primeng/inputtext';
@@ -23,24 +23,21 @@ export class DesignComponent {
   //min/max range values for sliders
   mouseRadMin: number = 20;
   mouseRadMax: number = 500;
-
   lineLengthMin: number = 1;
   lineLengthMax: number = 200;
-
   lineWidthMin: number = 1;
   lineWidthMax: number = 200;
-
   gridSpaceMin: number = 4;
   gridSpaceMax: number = 300;
-
   speedMin: number = 0;
   speedMax: number = 150;
-  
+
   angleFunc: string = 'cos(x * .01) + sin(y * .01)';
   lineToX: string = 'x + cos(angle) * length';
   lineToY: string = 'y + sin(angle) * length';
 
   //input object with default values
+  //will represent the current canvas state after edits
   canvasInputData: CanvasInput = {
     gridSpacing: 20,
     lineWidth: 2,
@@ -52,11 +49,12 @@ export class DesignComponent {
     speed: 10,
     angleFunc: this.angleFunc,
     lineToXFunc: this.lineToX,
-    lineToYFunc: this.lineToY
+    lineToYFunc: this.lineToY,
+    renderAnimation: false,
   };
 
   //function for adding slider number values
-  updateValue(newVal: number | string , key: string) {
+  updateValue(newVal: number | string | boolean, key: string) {
 
     if (this.valueIsValid(newVal, key)) {
       this.canvasInputData = { ...this.canvasInputData, [key]: newVal }
@@ -88,7 +86,9 @@ export class DesignComponent {
       case 'lineToYFunc':
         return true;  
       case 'speed':
-        return (value >=this.speedMin && value <= this.speedMax);    
+        return (value >=this.speedMin && value <= this.speedMax);   
+      case 'renderAnimation':
+        return true; 
     }
 
     return false;
@@ -102,8 +102,13 @@ export class DesignComponent {
     this.animating = !this.animating;
     this.canvasInputData = { ...this.canvasInputData, animate: !this.canvasInputData.animate }
   }
-  
-}
 
+  //send new canvasInputData with renderAnimation set to true
+  //will render and save cavnas animation to mysql in canvas component
+  saveDesign() {
+    console.log('saving design');
+    this.updateValue(true, 'renderAnimation');
+  }
+}
 //walking spider: 
-/*{ gridSpacing: 47, lineWidth: 1, lineLength: 1, mouseEffect: "dim", mouseRadius: 163, colorList: (4) […], animate: true, angleFunc: "Math.cos(x * .01) + Math.sin(y * .01)", lineToXFunc: "x + Math.cos(angle) * length * 1000", lineToYFunc: "1*y*length" } */
+// { gridSpacing: 47, lineWidth: 1, lineLength: 1, mouseEffect: "dim", mouseRadius: 163, colorList: (4) […], animate: true, angleFunc: "Math.cos(x * .01) + Math.sin(y * .01)", lineToXFunc: "x + Math.cos(angle) * length * 1000", lineToYFunc: "1*y*length" }

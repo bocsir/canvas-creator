@@ -9,5 +9,6 @@ export interface CanvasInput {
     speed: number,
     angleFunc: string,
     lineToXFunc: string, 
-    lineToYFunc: string
+    lineToYFunc: string,
+    renderAnimation: boolean,
 }
